@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MAUI.CleanArchitecture.Application;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MAUI.CleanArchitecture.ViewModels;
+using MAUI.CleanArchitecture.Utils;
 
 namespace MAUI.CleanArchitecture
 {
@@ -22,13 +23,11 @@ namespace MAUI.CleanArchitecture
 				});
 
 			var services = builder.Services;
-			services.AddScoped(typeof(MainPageViewModel));
 
+			services.AddSingleton<IPageManager, PageManager>();
 			services.AddApplication();
-
-			var sp = services.BuildServiceProvider();
 			
-			ViewModelLocator.ServiceProvider = sp;
+			ViewModelLocator.Initialize(services);
 			return builder.Build();
 		}
 	}

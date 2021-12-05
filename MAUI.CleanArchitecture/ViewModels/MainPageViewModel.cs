@@ -1,16 +1,9 @@
-﻿using MAUI.CleanArchitecture.Application.MainModel.Queries;
-using MAUI.CleanArchitecture.Domain;
+﻿using MAUI.CleanArchitecture.Domain;
+using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
 using Microsoft.Maui.Controls;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MAUI.CleanArchitecture.ViewModels
@@ -18,10 +11,12 @@ namespace MAUI.CleanArchitecture.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         private readonly IMediator _mediator;
-        private int _count = 0;
-        public MainPageViewModel(IMediator mediator)
+        private readonly IPageManager _pageManager;
+
+        public MainPageViewModel(IMediator mediator, Utils.IPageManager pageManager)
         {
             _mediator = mediator;
+            _pageManager = pageManager;
         }
 
         private string _currentCount;
@@ -40,15 +35,24 @@ namespace MAUI.CleanArchitecture.ViewModels
             set { _subItgems = value; OnPropertyChanged(); }
         }
 
+        private bool _isButtonEnabled = true;
+
+        public bool IsButtonEnabled
+        {
+            get { return _isButtonEnabled; }
+            set { _isButtonEnabled = value;OnPropertyChanged(); }
+        }
 
 
         public ICommand CounterClickedCommand => new Command(() => CounterClickedHandlerAsync(), () => true);
 
         private async void CounterClickedHandlerAsync()
         {
-            var mm = await _mediator.Send(new GetMainModelQuery());
-            SubItems = mm.SubItems;
-            CurrentCount = $"Current count: {mm.TotalQuantity}";
+            var loginPageRes = await _pageManager.StartPage<LoginPageViewModel>();
+            //IsButtonEnabled = true;
+            //var mm = await _mediator.Send(new GetMainModelQuery());
+            //SubItems = mm.SubItems;
+            //CurrentCount = $"Current count: {mm.TotalQuantity}";
         }
     }
 }

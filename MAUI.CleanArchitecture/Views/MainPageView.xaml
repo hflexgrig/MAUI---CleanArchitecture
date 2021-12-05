@@ -22,7 +22,7 @@
                 
             </HorizontalStackLayout>
             <Button 
-                Text="Click me"
+                Text="Click me" IsEnabled="{Binding IsButtonEnabled}"
                 FontAttributes="Bold"
                 Grid.Row="4"
                 SemanticProperties.Hint="Counts the number of times you click"

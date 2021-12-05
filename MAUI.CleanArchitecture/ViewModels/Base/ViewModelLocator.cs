@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MAUI.CleanArchitecture.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,61 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
         public static readonly BindableProperty AutoWireViewModelProperty =
             BindableProperty.CreateAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), default(bool), propertyChanged: OnAutoWireViewModelChanged);
 
-        public static ServiceProvider ServiceProvider { get; internal set; }
+        public static INavigation NavigationPage { get; internal set; }
+
+        internal static void Initialize(IServiceCollection services)
+        {
+            Services = services;
+
+            var viewsAndViewModels = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsClass && x.GetInterface("INotifyPropertyChanged") != null).ToList();
+            TypeByNameDict = viewsAndViewModels.ToDictionary(x => x.FullName, x => x);
+            var viewModels = viewsAndViewModels.Where(x => x.Name.EndsWith("ViewModel")).ToList();
+            var views = viewsAndViewModels.Where(x => x.Name.EndsWith("View")).ToList();
+
+            ViewToViewModelDict = Enumerable.Join<Type, Type, string, ValueTuple<Type, Type>>(views, viewModels, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer()).ToDictionary(x => x.Item1, y => y.Item2);
+            ViewModelToViewDict = Enumerable.Join<Type, Type, string, ValueTuple<Type, Type>>(viewModels, views, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer()).ToDictionary(x => x.Item1, y => y.Item2);
+
+            //var dict = views.Join<List<Type>, List<Type>, string, ValueTuple<Type, Type>>(viewModels, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer())
+               // .ToDictionary<Type, Type>(x => x.Item1, y => y.Item2);
+            foreach (Type vm in viewModels)
+            {
+                services.AddTransient(vm);
+            }
+            ServiceProvider = services.BuildServiceProvider();
+            ViewModelsRegistered = true;
+        }
+
+        internal static async Task<bool> StartPage<TViewModel>()
+        {
+            var viewModelType = typeof(TViewModel);
+
+            if (!viewModelType.Name.EndsWith("PageViewModel") || !ViewModelToViewDict.TryGetValue(viewModelType, out var viewType))
+            {
+                return false;
+            }
+
+            var viewInstance = Activator.CreateInstance(viewType);
+
+            if (viewInstance is Page view)
+            {
+               // await Task.Delay(1000);
+                await NavigationPage.PushAsync(view);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool ViewModelsRegistered = false;
+
+        public static ServiceProvider ServiceProvider { get; private set; }
+        public static IServiceCollection Services { get; private set; }
+        public static Dictionary<Type, Type> ViewToViewModelDict { get; private set; }
+        public static Dictionary<Type, Type> ViewModelToViewDict { get; private set; }
+        public static Dictionary<string, Type> TypeByNameDict { get; private set; }
 
         public static bool GetAutoWireViewModel(BindableObject bindableObject)
         {
@@ -37,12 +93,32 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             var viewModelName = $"{viewType.FullName.Replace(".Views.", ".ViewModels.")}Model";
             //var viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
             //var viewModelName
-            var viewModelType = Type.GetType(viewModelName);
-            if (viewModelType == null) return;
 
+            if (!TypeByNameDict.TryGetValue(viewModelName, out var viewModelType))
+            {
+                return;
+            }
+
+            while (!ViewModelsRegistered)
+            {
+
+            }
             var viewModel = ServiceProvider.GetRequiredService(viewModelType);
 
             view.BindingContext = viewModel;
+        }
+
+        public class ViewToViewModelComparer : IEqualityComparer<string>
+        {
+            public bool Equals(string l, string r)
+            {
+                return $"{l}Model" == r || $"{r}Model" == l;
+            }
+
+            public int GetHashCode(string obj)
+            {
+                return obj.EndsWith("Model") ? obj.Replace("Model", string.Empty).GetHashCode() : obj.GetHashCode();
+            }
         }
     }
 }
