@@ -1,9 +1,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
+             xmlns:models="clr-namespace:MAUI.CleanArchitecture.Domain.Entities;assembly=MAUI.CleanArchitecture.Domain"
              xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
              x:Class="MAUI.CleanArchitecture.Views.MainPageView"
+             Title="MAUI Eshop"
              BackgroundColor="{DynamicResource SecondaryColor}">
 
     <ContentPage.Resources>
@@ -13,59 +15,110 @@
 
             </StackLayout>
         </DataTemplate>
+
+        <DataTemplate x:Key="FavTemplate">
+            <!--<StackLayout>
+                <Label Text="{Binding Title}"/>
+            </StackLayout>-->
+                <GridLayout
+                                RowDefinitions="42,40,*"
+                                Padding="20">
+                    <Image
+                                    Source="{Binding Image}"
+                                    WidthRequest="36"
+                                    HeightRequest="36"
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End"/>
+
+                    <Label Text="{Binding Title}"
+                                           />
+
+                    <VerticalStackLayout
+                                    Spacing="0"
+                                    GridLayout.RowSpan="3" 
+                                    VerticalOptions="Center">
+                        <Label Text="{Binding Category}"  />
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout
+                                GridLayout.Row="2"
+                                Spacing="10"
+                                VerticalOptions="End">
+                        <Image Source="login.png" VerticalOptions="Center"
+                                       WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="test"  VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout
+                                    GridLayout.Row="2"
+                                    Spacing="10"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="End">
+                        <Image Source="login.png" VerticalOptions="Center"
+                                       WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="45%" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </GridLayout>
+
+
+
+        </DataTemplate>
+
+       
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Sign In"
+                 IconImageSource="login.png"
+                 Command="{Binding LoginCommand}"
+                 Order="Primary"
+                 Priority="0" />
+        <ToolbarItem Text="Sign Up"
+                 IconImageSource="signup.png"
+                 Order="Primary"
+                 Priority="0" />
+    </ContentPage.ToolbarItems>
+    
+    
     <ScrollView>
-        <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
+        <VerticalStackLayout>
+            
+            <CollectionView
+                Margin="8,0"
+                ItemsSource="{Binding StoreItems}"
+                ItemTemplate="{StaticResource FavTemplate}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2"
+                                     VerticalItemSpacing="8"
+                                     HorizontalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.FooterTemplate>
+                    <DataTemplate>
+                        <Border
+                            HeightRequest="132"
+                            WidthRequest="132"
+                            HorizontalOptions="Start"
+                            Margin="{OnIdiom Phone=15,Default=25}"
+                            Stroke="Transparent"
+                            StrokeThickness="1"
+                            BackgroundColor="Gray">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="60"/>
+                            </Border.StrokeShape>
+                            <ImageButton
+                                BackgroundColor="Transparent"
+                                Source="login.png"
+                                VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.FooterTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+        <!--<Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
               Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
 
-            <HorizontalStackLayout Grid.Row="0"  BindableLayout.ItemsSource="{Binding SubItems}" BindableLayout.ItemTemplate="{StaticResource SubItemsKey}">
-                
-            </HorizontalStackLayout>
-            <Button 
-                Text="Click me" IsEnabled="{Binding IsButtonEnabled}"
-                FontAttributes="Bold"
-                Grid.Row="4"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Command="{Binding CounterClickedCommand}"
-                HorizontalOptions="Center" />
-            <!--<Label 
-                Text="Hello, World!"
-                Grid.Row="0"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+           
 
-            <Label 
-                Text="Welcome to .NET Multi-platform App UI"
-                Grid.Row="1"
-                SemanticProperties.HeadingLevel="Level1"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Label 
-                Text="{Binding CurrentCount}"
-                Grid.Row="2"
-                FontSize="18"
-                FontAttributes="Bold"
-                x:Name="CounterLabel"
-                HorizontalOptions="Center" />
-
-            <Button 
-                Text="Click me"
-                FontAttributes="Bold"
-                Grid.Row="3"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Command="{Binding CounterClickedCommand}"
-                HorizontalOptions="Center" />
-
-            <Image Grid.Row="4"
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                WidthRequest="250"
-                HeightRequest="310"
-                HorizontalOptions="Center" />-->
-
-        </Grid>
+        </Grid>-->
     </ScrollView>
 </ContentPage>

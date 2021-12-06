@@ -1,4 +1,5 @@
-﻿using MAUI.CleanArchitecture.Domain;
+﻿using MAUI.CleanArchitecture.Application.Store.Queries;
+using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
@@ -13,42 +14,53 @@ namespace MAUI.CleanArchitecture.ViewModels
         private readonly IMediator _mediator;
         private readonly IPageManager _pageManager;
 
+        public Command LoginCommand { get; }
+        private bool _notClicked = true;
         public MainPageViewModel(IMediator mediator, Utils.IPageManager pageManager)
         {
             _mediator = mediator;
             _pageManager = pageManager;
+            LoginCommand = new Command(LoginCommandHandler, (x) => _notClicked);
+            LoadItems();
         }
 
-        private string _currentCount;
-
-        public string CurrentCount
+        private async void LoadItems()
         {
-            get => _currentCount;
-            set { _currentCount = value; }
+            StoreItems = await _mediator.Send(new GetStoreItemsQuery());
         }
 
-        private IList<SubItem> _subItgems;
-
-        public IList<SubItem> SubItems
+        private async void LoginCommandHandler(object obj)
         {
-            get => _subItgems;
-            set { _subItgems = value; OnPropertyChanged(); }
+            var loginPageRes = await _pageManager.StartPage<LoginPageViewModel>();
+            _notClicked = false;
+            LoginCommand.ChangeCanExecute();
         }
+
+
 
         private bool _isButtonEnabled = true;
+        private IList<StoreItem> _storeItems;
 
         public bool IsButtonEnabled
         {
             get { return _isButtonEnabled; }
-            set { _isButtonEnabled = value;OnPropertyChanged(); }
+            set { _isButtonEnabled = value; OnPropertyChanged(); }
         }
 
 
         public ICommand CounterClickedCommand => new Command(() => CounterClickedHandlerAsync(), () => true);
 
+        public IList<StoreItem> StoreItems
+        {
+            get => _storeItems; private set
+            {
+                _storeItems = value; 
+                OnPropertyChanged();
+            }
+        }
+
         private async void CounterClickedHandlerAsync()
         {
-            var loginPageRes = await _pageManager.StartPage<LoginPageViewModel>();
             //IsButtonEnabled = true;
             //var mm = await _mediator.Send(new GetMainModelQuery());
             //SubItems = mm.SubItems;

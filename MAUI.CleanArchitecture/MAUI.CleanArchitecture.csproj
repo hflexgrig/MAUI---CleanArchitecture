@@ -49,6 +49,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\MAUI.CleanArchitecture.Application\MAUI.CleanArchitecture.Application.csproj" />
 	  <ProjectReference Include="..\MAUI.CleanArchitecture.Domain\MAUI.CleanArchitecture.Domain.csproj" />
 	  <ProjectReference Include="..\MAUI.CleanArchitecture.Infrastructure\MAUI.CleanArchitecture.Infrastructure.csproj" />

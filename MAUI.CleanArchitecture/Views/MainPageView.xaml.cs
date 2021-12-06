@@ -11,14 +11,6 @@ namespace MAUI.CleanArchitecture.Views
 		public MainPageView()
 		{
 			InitializeComponent();
-
 		}
-
-		//private void OnCounterClicked(object sender, EventArgs e)
-		//{
-
-
-		//	//SemanticScreenReader.Announce(CounterLabel.Text);
-		//}
 	}
 }

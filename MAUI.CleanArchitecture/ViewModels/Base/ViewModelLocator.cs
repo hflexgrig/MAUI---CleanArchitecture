@@ -16,7 +16,12 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
         public static readonly BindableProperty AutoWireViewModelProperty =
             BindableProperty.CreateAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), default(bool), propertyChanged: OnAutoWireViewModelChanged);
 
-        public static INavigation NavigationPage { get; internal set; }
+        public static INavigation Navigation { get; private set; }
+
+        internal static void InitializeNavigation(this INavigation navigation)
+        {
+            Navigation = navigation;
+        }
 
         internal static void Initialize(IServiceCollection services)
         {
@@ -28,14 +33,13 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             var views = viewsAndViewModels.Where(x => x.Name.EndsWith("View")).ToList();
 
             ViewToViewModelDict = Enumerable.Join<Type, Type, string, ValueTuple<Type, Type>>(views, viewModels, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer()).ToDictionary(x => x.Item1, y => y.Item2);
-            ViewModelToViewDict = Enumerable.Join<Type, Type, string, ValueTuple<Type, Type>>(viewModels, views, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer()).ToDictionary(x => x.Item1, y => y.Item2);
+            ViewModelToViewDict = ViewToViewModelDict.ToDictionary(x => x.Value, x => x.Key);
 
-            //var dict = views.Join<List<Type>, List<Type>, string, ValueTuple<Type, Type>>(viewModels, x => x.Name, y => y.Name, (view, viewModel) => (view, viewModel), new ViewToViewModelComparer())
-               // .ToDictionary<Type, Type>(x => x.Item1, y => y.Item2);
             foreach (Type vm in viewModels)
             {
                 services.AddTransient(vm);
             }
+
             ServiceProvider = services.BuildServiceProvider();
             ViewModelsRegistered = true;
         }
@@ -54,7 +58,7 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             if (viewInstance is Page view)
             {
                // await Task.Delay(1000);
-                await NavigationPage.PushAsync(view);
+                await Navigation.PushAsync(view);
             }
             else
             {

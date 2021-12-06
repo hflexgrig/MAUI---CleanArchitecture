@@ -7,6 +7,7 @@ using MAUI.CleanArchitecture.Application;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MAUI.CleanArchitecture.ViewModels;
 using MAUI.CleanArchitecture.Utils;
+using MAUI.CleanArchitecture.Infrastructure;
 
 namespace MAUI.CleanArchitecture
 {
@@ -16,7 +17,7 @@ namespace MAUI.CleanArchitecture
 		{
 			var builder = MauiApp.CreateBuilder();
 			builder
-				.UseMauiApp<App>()
+				.UseMauiApp<App>() 
 				.ConfigureFonts(fonts =>
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -26,6 +27,7 @@ namespace MAUI.CleanArchitecture
 
 			services.AddSingleton<IPageManager, PageManager>();
 			services.AddApplication();
+			services.AddInfrastructure();
 			
 			ViewModelLocator.Initialize(services);
 			return builder.Build();

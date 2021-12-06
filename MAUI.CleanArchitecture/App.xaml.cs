@@ -14,7 +14,7 @@ namespace MAUI.CleanArchitecture
 
             var mainPage = new MainPageView();
             Navigation = new NavigationPage(mainPage);
-            ViewModelLocator.NavigationPage = mainPage.Navigation;
+            mainPage.Navigation.InitializeNavigation();
         }
 
         public NavigationPage Navigation { get; }

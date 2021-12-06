@@ -6,17 +6,20 @@
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
              xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
+             Title="Login"
              BackgroundColor="White">
 	<ContentPage.Content>
-		<StackLayout>
+		<StackLayout Padding="20" Spacing="5">
+            <BoxView HeightRequest="10"/>
             <Entry Text="{Binding Login}" Placeholder="Login"  />
             <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Login" />
 
             <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Password"  />
             <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Password" />
+            
             <Button Command="{Binding LoginCommand}" Text="Login" />
 
-            <controls:Errors ItemsSource="{Binding Errors}"  />
+            <!--<controls:Errors ItemsSource="{Binding Errors}"  />-->
 
         </StackLayout>
 	</ContentPage.Content>
