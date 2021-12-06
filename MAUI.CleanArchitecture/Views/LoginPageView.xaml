@@ -4,15 +4,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
              BackgroundColor="White">
 	<ContentPage.Content>
 		<StackLayout>
             <Entry Text="{Binding Login}" Placeholder="Login"  />
-            
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Login" />
+
             <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Password"  />
-            <CollectionView ItemsSource="{Binding ValidationErrors}"></CollectionView>
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Password" />
             <Button Command="{Binding LoginCommand}" Text="Login" />
+
+            <controls:Errors ItemsSource="{Binding Errors}"  />
+
         </StackLayout>
 	</ContentPage.Content>
 </ContentPage>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="MAUI.CleanArchitecture.Controls.Errors"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MAUI.CleanArchitecture.Controls"
+             x:Name="this"
+             BackgroundColor="White">
+	<ContentView.Content>
+		<CollectionView BindingContext="{x:Reference this}" ItemsSource="{Binding ItemsSource}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <Label Text="{Binding ErrorMessage}" TextColor="Red" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+			
+		</CollectionView>
+	</ContentView.Content>
+</ContentView>
