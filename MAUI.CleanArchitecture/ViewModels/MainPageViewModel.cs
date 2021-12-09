@@ -1,5 +1,6 @@
 ﻿using MAUI.CleanArchitecture.Application.Store.Queries;
 using MAUI.CleanArchitecture.Domain.Entities;
+using MAUI.CleanArchitecture.Infrastructure.BackgroundServices;
 using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
@@ -16,7 +17,7 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         public Command LoginCommand { get; }
         private bool _notClicked = true;
-        public MainPageViewModel(IMediator mediator, Utils.IPageManager pageManager)
+        public MainPageViewModel(IMediator mediator, Utils.IPageManager pageManager, DbBackgroundService dbBackgroundService)
         {
             _mediator = mediator;
             _pageManager = pageManager;

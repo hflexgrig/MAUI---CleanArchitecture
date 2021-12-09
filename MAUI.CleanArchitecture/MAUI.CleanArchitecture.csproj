@@ -49,8 +49,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
-	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+	  <None Remove="Configuration\appsettings.debug.json" />
+	  <None Remove="Configuration\appsettings.release.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Configuration\appsettings.release.json" />
+	  <EmbeddedResource Include="Configuration\appsettings.debug.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
