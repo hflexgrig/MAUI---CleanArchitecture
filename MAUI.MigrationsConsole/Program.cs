@@ -12,7 +12,7 @@ Console.WriteLine("Hello, World!");
 var appSettings = new AppSettings() { ConnectionStrings = new ConnectionStrings { DefaultConnection = "test.db"} };
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
-        services.AddInfrastructure(appSettings))
+        services.AddInfrastructure())
     .Build();
 
 await host.RunAsync();

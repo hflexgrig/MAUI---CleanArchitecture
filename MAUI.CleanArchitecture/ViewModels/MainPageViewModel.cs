@@ -1,6 +1,5 @@
 ﻿using MAUI.CleanArchitecture.Application.Store.Queries;
 using MAUI.CleanArchitecture.Domain.Entities;
-using MAUI.CleanArchitecture.Infrastructure.BackgroundServices;
 using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
@@ -17,7 +16,7 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         public Command LoginCommand { get; }
         private bool _notClicked = true;
-        public MainPageViewModel(IMediator mediator, Utils.IPageManager pageManager, DbBackgroundService dbBackgroundService)
+        public MainPageViewModel(IMediator mediator, IPageManager pageManager)
         {
             _mediator = mediator;
             _pageManager = pageManager;
@@ -49,23 +48,13 @@ namespace MAUI.CleanArchitecture.ViewModels
         }
 
 
-        public ICommand CounterClickedCommand => new Command(() => CounterClickedHandlerAsync(), () => true);
-
         public IList<StoreItem> StoreItems
         {
             get => _storeItems; private set
             {
-                _storeItems = value; 
+                _storeItems = value;
                 OnPropertyChanged();
             }
-        }
-
-        private async void CounterClickedHandlerAsync()
-        {
-            //IsButtonEnabled = true;
-            //var mm = await _mediator.Send(new GetMainModelQuery());
-            //SubItems = mm.SubItems;
-            //CurrentCount = $"Current count: {mm.TotalQuantity}";
         }
     }
 }

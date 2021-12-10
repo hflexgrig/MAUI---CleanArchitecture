@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Infrastructure.BackgroundServices
 {
-    public class DbBackgroundService 
+    public class DbBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -17,10 +17,11 @@ namespace MAUI.CleanArchitecture.Infrastructure.BackgroundServices
         {
             _serviceProvider = serviceProvider;
 
-            ExecuteAsync(default);
+           // ExecuteAsync(default);
         }
 
-        protected async Task ExecuteAsync(CancellationToken stoppingToken)
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

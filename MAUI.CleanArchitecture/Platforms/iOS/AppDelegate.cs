@@ -7,6 +7,11 @@ namespace MAUI.CleanArchitecture
 	[Register("AppDelegate")]
 	public class AppDelegate : MauiUIApplicationDelegate
 	{
-		protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
-	}
+        protected override MauiApp CreateMauiApp()
+        {
+            var app = MauiProgram.CreateMauiApp();
+            app.StartAsync().GetAwaiter().GetResult();
+            return app;
+        }
+    }
 }

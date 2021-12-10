@@ -18,55 +18,39 @@ using MAUI.CleanArchitecture.Infrastructure.BackgroundServices;
 
 namespace MAUI.CleanArchitecture
 {
-	public static class MauiProgram
-	{
-		public static MauiApp CreateMauiApp()
-		{
-			var builder = MauiApp.CreateBuilder();
-			builder
-				.UseMauiApp<App>()
-				.ConfigureFonts(fonts =>
-				{
-					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				});
+    public static class MauiProgram
+    {
+        public static MauiApp CreateMauiApp()
+        {
+#if DEBUG
+            var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MAUI.CleanArchitecture.Configuration.appsettings.debug.json");
+#else
+			var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MAUI.CleanArchitecture.Configuration.appsettings.release.json");
+#endif
 
-			var services = builder.Services;
+            var builder = MauiApp.CreateBuilder();
+            builder.Host.ConfigureAppConfiguration((prop, config) =>
+                config.AddJsonStream(appSettingsStream)
+            );
 
+            builder.Host.ConfigureServices((context, services) =>
+            {
+                services.AddSingleton<IPageManager, PageManager>();
+                services.AddApplication();
+                services.AddInfrastructure();
 
-			//#if DEBUG
-			//			var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MAUI.CleanArchitecture.Configuration.appsettings.debug.json");
-			//#else
-			//			var appSettingsStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MAUI.CleanArchitecture.Configuration.appsettings.release.json");
-			//#endif
+                ViewModelLocator.Initialize(services);
 
-			//			if (appSettingsStream == null)
-			//			{
-			//				throw new Exception("No appsettings json file");
-			//			}
+                var connString = context.Configuration.GetConnectionString("DefaultConnection");
+            });
+            builder
+                .UseMauiApp<App>()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                });
 
-			//			AppSettings appSettings;
-			//			using (var streamReader = new StreamReader(appSettingsStream))
-			//			{
-			//				var jsonString = streamReader.ReadToEnd();
-
-			//				appSettings = JsonSerializer.Deserialize<AppSettings>(jsonString);
-			//				if (appSettings is null)
-			//				{
-			//					throw new Exception("Can't deserialize appsettings.json file");
-			//				}
-
-			//				services.AddSingleton(appSettings);
-			//			}
-			var appSettings = new AppSettings() { ConnectionStrings = new ConnectionStrings { DefaultConnection = "Data Source={0}\\store.db" } };
-
-			services.AddSingleton(appSettings);
-
-			services.AddSingleton<IPageManager, PageManager>();
-			services.AddApplication();
-			services.AddInfrastructure(appSettings);
-
-			ViewModelLocator.Initialize(services);
-			return builder.Build();
-		}
-	}
+            return builder.Build();
+        }
+    }
 }

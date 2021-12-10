@@ -14,6 +14,11 @@ namespace MAUI.CleanArchitecture
 		{
 		}
 
-		protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
-	}
+        protected override MauiApp CreateMauiApp()
+        {
+			var app = MauiProgram.CreateMauiApp();
+			app.StartAsync().GetAwaiter().GetResult();
+            return app;
+        }
+    }
 }
