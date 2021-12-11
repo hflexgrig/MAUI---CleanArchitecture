@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using MAUI.CleanArchitecture.Application.MainModel.Queries;
+using FluentValidation.Results;
+using MAUI.CleanArchitecture.Application.Common.Interfaces;
 using MAUI.CleanArchitecture.Application.User.Commands.Login;
 using MAUI.CleanArchitecture.Domain;
 using MAUI.CleanArchitecture.ViewModels.Base;
@@ -14,13 +15,17 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MAUI.CleanArchitecture.Application.Common.Exceptions;
+using MAUI.CleanArchitecture.Application.Common.Models;
+using System.Threading;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
-    public class LoginPageViewModel : ViewModelBase
+    public class LoginPageViewModel : ViewModelBase, INotificationHandler<UserInfo>
     {
         private readonly IMediator _mediator;
         private readonly IValidator<LoginCommand> _validator;
+        private readonly IAuthentication _authentication;
         private LoginCommand _loginModel = new LoginCommand();
         public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator)
         {
@@ -48,9 +53,24 @@ namespace MAUI.CleanArchitecture.ViewModels
             set { _loginModel.Password = value; OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
         }
 
-        private void LoginHandlerAsync()
+        public Task Handle(UserInfo notification, CancellationToken cancellationToken)
         {
+            return Task.CompletedTask;
+        }
 
+        private async void LoginHandlerAsync()
+        {
+            try
+            {
+                await _mediator.Publish(new UserInfo());
+
+                //var result = await _authentication.CreateUser(Login, Password);
+
+            }
+            catch (Application.Common.Exceptions.ValidationException ex)
+            {
+                CustomErrors = ex.ValidationErrors.Select(x => new ValidationFailure(x.Key, x.Value));
+            }
         }
     }
 }

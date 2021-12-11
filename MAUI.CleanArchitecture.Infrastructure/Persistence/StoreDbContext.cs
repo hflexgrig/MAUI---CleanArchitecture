@@ -1,5 +1,8 @@
 ﻿using MAUI.CleanArchitecture.Application.Common.Interfaces;
 using MAUI.CleanArchitecture.Domain.Entities;
+using MAUI.CleanArchitecture.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Infrastructure.Persistence
 {
-    public class StoreDbContext : DbContext, IStoreDbContext
+    public class StoreDbContext : IdentityDbContext<ApplicationUser>, IStoreDbContext
     {
         private readonly IConfiguration _configuration;
 
@@ -21,10 +24,11 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
         }
 
         public DbSet<StoreItem> StoreItems { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
 
         public Task MigrateAsync(CancellationToken token)
         {
-           return Database.MigrateAsync(token);
+            return Database.MigrateAsync(token);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -45,6 +49,14 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityUser>(e => e.ToTable("StoreUsers"));
+            modelBuilder.Entity<IdentityRole>(e => e.ToTable("Roles"));
+            modelBuilder.Entity<IdentityUserClaim<string>>(e => e.ToTable("UserClaims"));
+            modelBuilder.Entity<IdentityUserLogin<string>>(e => e.ToTable("UserLogins"));
+            modelBuilder.Entity<IdentityUserToken<string>>(e => e.ToTable("UserTokens"));
+            modelBuilder.Entity<IdentityRoleClaim<string>>(e => e.ToTable("UserRoleClaims"));
+            modelBuilder.Entity<IdentityUserRole<string>>(e => e.ToTable("UserRole"));
         }
     }
 }

@@ -73,6 +73,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\RegisterPageView.xaml.cs">
+	    <DependentUpon>RegisterPageView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\LoginPageView.xaml.cs">
 	    <DependentUpon>LoginPageView.xaml</DependentUpon>
 	  </Compile>
@@ -80,6 +83,10 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\Errors.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RegisterPageView.xaml">
+	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPageView.xaml">

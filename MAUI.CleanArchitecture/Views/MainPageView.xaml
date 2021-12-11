@@ -67,15 +67,16 @@
        
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Sign In"
-                 IconImageSource="login.png"
-                 Command="{Binding LoginCommand}"
+        <ToolbarItem Text="{Binding ToolbarItem1Text}"
+                 IconImageSource="{Binding ToolbarItem1Logo}"
+                 Command="{Binding ToolbarItem1Command}"
                  Order="Primary"
                  Priority="0" />
-        <ToolbarItem Text="Sign Up"
+        <!--<ToolbarItem Text="Sign Up"
                  IconImageSource="signup.png"
+                 Command="{Binding RegisterCommand}"
                  Order="Primary"
-                 Priority="0" />
+                 Priority="0" />-->
     </ContentPage.ToolbarItems>
     
     

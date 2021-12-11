@@ -25,5 +25,14 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
                 OnPropertyChanged();
             }
         }
+
+        private IEnumerable _customErrors;
+
+        public IEnumerable CustomErrors
+        {
+            get { return _customErrors; }
+            set { _customErrors = value; OnPropertyChanged(); }
+        }
+
     }
 }

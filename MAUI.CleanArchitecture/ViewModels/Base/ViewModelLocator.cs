@@ -1,4 +1,6 @@
-﻿using MAUI.CleanArchitecture.Views;
+﻿using MAUI.CleanArchitecture.Application.Common.Models;
+using MAUI.CleanArchitecture.Views;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Hosting;
@@ -40,20 +42,24 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
 
             foreach (Type vm in viewModels)
             {
-                services.AddTransient(vm);
+                services.AddScoped(vm);
+                services.AddScoped<INotificationHandler<UserInfo>>(sp =>
+                {
+                    return (INotificationHandler<UserInfo>)sp.GetService(vm);
+                });
             }
 
             ServiceProvider = services.BuildServiceProvider();
             ViewModelsRegistered = true;
         }
 
-        internal static async Task<bool> StartPage<TViewModel>()
+        internal static async Task<TViewModel> StartPageAsync<TViewModel>()
         {
             var viewModelType = typeof(TViewModel);
 
             if (!viewModelType.Name.EndsWith("PageViewModel") || !ViewModelToViewDict.TryGetValue(viewModelType, out var viewType))
             {
-                return false;
+                return default(TViewModel);
             }
 
             var viewInstance = Activator.CreateInstance(viewType);
@@ -64,10 +70,15 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             }
             else
             {
-                return false;
+                return default(TViewModel);
             }
 
-            return true;
+            return (TViewModel)view.BindingContext;
+        }
+
+        internal static async Task PopPageAsync()
+        {
+            await Navigation.PopAsync();
         }
 
         private static bool ViewModelsRegistered = false;
@@ -103,7 +114,7 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             {
 
             }
-            var viewModel = ServiceProvider.GetRequiredService(viewModelType);
+            var viewModel = ServiceProvider.GetServices<INotificationHandler<UserInfo>>().FirstOrDefault(t => t.GetType() == viewModelType);
 
             view.BindingContext = viewModel;
         }

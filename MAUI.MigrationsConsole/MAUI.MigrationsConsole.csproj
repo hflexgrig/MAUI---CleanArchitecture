@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MAUI.CleanArchitecture.Application\MAUI.CleanArchitecture.Application.csproj" />
-    <ProjectReference Include="..\MAUI.CleanArchitecture.Domain\MAUI.CleanArchitecture.Domain.csproj" />
     <ProjectReference Include="..\MAUI.CleanArchitecture.Infrastructure\MAUI.CleanArchitecture.Infrastructure.csproj" />
   </ItemGroup>
 

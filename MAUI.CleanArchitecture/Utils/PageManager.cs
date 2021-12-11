@@ -9,9 +9,14 @@ namespace MAUI.CleanArchitecture.Utils
 {
     public class PageManager : IPageManager
     {
-        public Task<bool> StartPage<TViewModel>()
+        public Task<TViewModel> StartPageAsync<TViewModel>()
         {
-            return ViewModelLocator.StartPage<TViewModel>();
+            return ViewModelLocator.StartPageAsync<TViewModel>();
+        }
+
+        public Task PopPageAsync()
+        {
+            return ViewModelLocator.PopPageAsync();
         }
     }
 }
