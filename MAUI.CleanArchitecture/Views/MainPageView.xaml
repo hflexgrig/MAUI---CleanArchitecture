@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
              xmlns:models="clr-namespace:MAUI.CleanArchitecture.Domain.Entities;assembly=MAUI.CleanArchitecture.Domain"
+             xmlns:converters="clr-namespace:MAUI.CleanArchitecture.Converters"
              xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
              x:Class="MAUI.CleanArchitecture.Views.MainPageView"
@@ -9,6 +10,7 @@
              BackgroundColor="{DynamicResource SecondaryColor}">
 
     <ContentPage.Resources>
+        <converters:DoubleToStringConverter x:Key="DoubleToStringConverter" />
         <DataTemplate x:Key="SubItemsKey">
             <StackLayout>
                 <local:SubItemView BindingContext="{Binding}"/>
@@ -16,17 +18,12 @@
             </StackLayout>
         </DataTemplate>
 
-        <DataTemplate x:Key="FavTemplate">
-            <!--<StackLayout>
-                <Label Text="{Binding Title}"/>
-            </StackLayout>-->
-                <GridLayout BackgroundColor="AliceBlue" 
-                                RowDefinitions="42,40,*"
+        <DataTemplate x:Key="StoreItemTemplate">
+            <GridLayout BackgroundColor="AliceBlue" 
+                                RowDefinitions="42,40,40" ColumnDefinitions="60*,40*"
                                 Padding="20">
-                    <Image
+                    <Image GridLayout.RowSpan="3" GridLayout.Column="1"
                                     Source="{Binding Image}"
-                                    WidthRequest="36"
-                                    HeightRequest="36"
                                     VerticalOptions="Start"
                                     HorizontalOptions="End"/>
 
@@ -40,28 +37,21 @@
                         <Label Text="{Binding Category}"  />
                     </VerticalStackLayout>
 
-                    <HorizontalStackLayout
+                 <HorizontalStackLayout
                                 GridLayout.Row="2"
                                 Spacing="10"
                                 VerticalOptions="End">
-                        <Image Source="login.png" VerticalOptions="Center"
-                                       WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="test"  VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
+                    <Button Text="Add to card" ImageSource="add_to_cart.png" />
+                    <Entry  Text="0" VerticalOptions="FillAndExpand" WidthRequest="100"/>
+                    <Label Text="$0" />
 
-                    <HorizontalStackLayout
-                                    GridLayout.Row="2"
-                                    Spacing="10"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="End">
-                        <Image Source="login.png" VerticalOptions="Center"
-                                       WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="45%" VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
+
+                    <!--<Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper" VerticalOptions="FillAndExpand" ValueChanged="NumericStepper_ValueChanged" />-->
+                    <!--<Entry BindingContext="{x:Reference Name=NumericStepper}" Text="{Binding Path=DataContext.Value, Mode=TwoWay, Converter={StaticResource DoubleToStringConverter}, UpdateSourceEventName=ValueChanged}" VerticalOptions="FillAndExpand"/>-->
+                </HorizontalStackLayout>
+
+                    
                 </GridLayout>
-
-
-
         </DataTemplate>
 
        
@@ -72,21 +62,15 @@
                  Command="{Binding ToolbarItem1Command}"
                  Order="Primary"
                  Priority="0" />
-        <!--<ToolbarItem Text="Sign Up"
-                 IconImageSource="signup.png"
-                 Command="{Binding RegisterCommand}"
-                 Order="Primary"
-                 Priority="0" />-->
     </ContentPage.ToolbarItems>
     
     
     <ScrollView>
         <VerticalStackLayout>
-            <Label Text="{Binding UserInfo.User.Email}" />
             <CollectionView
                 Margin="8,0"
                 ItemsSource="{Binding StoreItems}"
-                ItemTemplate="{StaticResource FavTemplate}"  >
+                ItemTemplate="{StaticResource StoreItemTemplate}"  >
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
                                      Span="2"
@@ -115,11 +99,6 @@
                 </CollectionView.FooterTemplate>
             </CollectionView>
         </VerticalStackLayout>
-        <!--<Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
-              Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
-
-           
-
-        </Grid>-->
+       
     </ScrollView>
 </ContentPage>

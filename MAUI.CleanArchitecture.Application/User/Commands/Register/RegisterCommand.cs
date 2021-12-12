@@ -1,4 +1,6 @@
-﻿using MAUI.CleanArchitecture.Domain.User;
+﻿using MAUI.CleanArchitecture.Application.Common.Models;
+using MAUI.CleanArchitecture.Application.Common.Notificications;
+using MAUI.CleanArchitecture.Domain.User;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.User.Commands.Register
 {
-    public class RegisterCommand : IRequest<Domain.Entities.User>
+    public class RegisterCommand : IRequest<SignupNotification>
     {
         public string Username { get; set; }
         public string Email { get; set; }

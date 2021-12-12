@@ -25,25 +25,15 @@ namespace MAUI.CleanArchitecture.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         private readonly IValidator<LoginCommand> _validator;
-        private readonly UserInfo _userInfo;
         private readonly IPageManager _pageManager;
         private LoginCommand _loginModel = new LoginCommand();
-        private IServiceScope _scope;
 
-        public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator, UserInfo userInfo, IPageManager pageManager)
+        public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator, IPageManager pageManager)
         {
-            //_serviceProvider = serviceProvider;
-            //_scope = 
-            //scope;
-            //_serviceProvider.CreateScope();
             _mediator = mediator;
-                //_scope.ServiceProvider.GetService<IMediator>();
-                //_scope.ServiceProvider.GetService<IMediator>();
             _validator = validator;
-            _userInfo = userInfo;
             _pageManager = pageManager;
             LoginCommand = new Command(() => LoginHandlerAsync(), () =>
             {
@@ -57,7 +47,7 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         private async void StartRegisterHandler()
         {
-           // await _pageManager.PopPageAsync();
+            // await _pageManager.PopPageAsync();
             await _pageManager.StartPageAsync<RegisterPageViewModel>();
         }
 
@@ -67,22 +57,21 @@ namespace MAUI.CleanArchitecture.ViewModels
         public string Login
         {
             get { return _loginModel.Username; }
-            set { _loginModel.Username = value;OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
+            set { _loginModel.Username = value; OnPropertyChanged(); LoginCommand.ChangeCanExecute(); }
         }
 
         public string Password
         {
             get { return _loginModel.Password; }
-            set { _loginModel.Password = value; OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
+            set { _loginModel.Password = value; OnPropertyChanged(); LoginCommand.ChangeCanExecute(); }
         }
-
 
         private async void LoginHandlerAsync()
         {
             try
             {
-                await _mediator.Send(_loginModel);
-                await _mediator.Publish(_userInfo);
+                var signinNotification = await _mediator.Send(_loginModel);
+                await _mediator.Publish(signinNotification);
             }
             catch (Application.Common.Exceptions.ValidationException ex)
             {

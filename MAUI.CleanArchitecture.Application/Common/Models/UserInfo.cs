@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.Common.Models
 {
-    public class UserInfo:INotification
+    public class UserInfo
     {
         public bool IsSignedIn { get; internal set; }
         

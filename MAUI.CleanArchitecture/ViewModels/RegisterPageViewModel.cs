@@ -20,6 +20,7 @@ using MAUI.CleanArchitecture.Application.User.Commands.Register;
 using MAUI.CleanArchitecture.Application.Common.Models;
 using MAUI.CleanArchitecture.Utils;
 using System.Threading;
+using MAUI.CleanArchitecture.Application.Common.Notificications;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
@@ -109,8 +110,8 @@ namespace MAUI.CleanArchitecture.ViewModels
         {
             try
             {
-                var result = await _mediator.Send(_registerModel);
-                await _mediator.Publish(_userInfo);
+                var signUpNotification = await _mediator.Send(_registerModel);
+                await _mediator.Publish(signUpNotification);
             }
             catch (Application.Common.Exceptions.ValidationException ex)
             {

@@ -1,4 +1,5 @@
 ﻿using MAUI.CleanArchitecture.Application.Common.Models;
+using MAUI.CleanArchitecture.Application.Common.Notificications;
 using MAUI.CleanArchitecture.Application.Store.Queries;
 using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Utils;
@@ -15,7 +16,9 @@ using System.Windows.Input;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase, INotificationHandler<UserInfo>
+    public class MainPageViewModel : ViewModelBase, 
+        INotificationHandler<SigninNotification>,
+        INotificationHandler<SignupNotification>
     {
         private readonly IMediator _mediator;
         private readonly IPageManager _pageManager;
@@ -48,18 +51,17 @@ namespace MAUI.CleanArchitecture.ViewModels
             }
         }
 
-        public async Task Handle(UserInfo notification, CancellationToken cancellationToken)
+        #region handlers
+        public Task Handle(SignupNotification notification, CancellationToken cancellationToken)
         {
-            await _pageManager.PopToRootPageAsync();
-            ToolbarItem1Text = $"Welcome {UserInfo.User}";
-            ToolbarItem1Logo = "signup.png";
-            OnPropertyChanged(nameof(UserInfo));
+            return ImplementSigninNotification(notification.UserInfo);
         }
 
-        private void StartUserInfoPageHandler(object obj)
+        public Task Handle(SigninNotification notification, CancellationToken cancellationToken)
         {
-            
+            return ImplementSigninNotification(notification.UserInfo);
         }
+        #endregion
 
         private bool _isButtonEnabled = true;
         private IList<StoreItem> _storeItems;
@@ -96,8 +98,16 @@ namespace MAUI.CleanArchitecture.ViewModels
             }
         }
 
-        public UserInfo UserInfo { get; }
+        public UserInfo UserInfo { get; private set; }
 
+        private async Task ImplementSigninNotification(UserInfo userInfo)
+        {
+            UserInfo = userInfo;
+            OnPropertyChanged(nameof(UserInfo));
+            await _pageManager.PopToRootPageAsync();
+            ToolbarItem1Text = $"Welcome {userInfo.User.UserName}";
+            ToolbarItem1Logo = "signup.png";
+        }
 
     }
 }

@@ -12,5 +12,15 @@ namespace MAUI.CleanArchitecture.Views
 		{
 			InitializeComponent();
 		}
-	}
+
+        private void NumericStepper_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+
+        }
+
+        private void NumericStepper_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+
+        }
+    }
 }
