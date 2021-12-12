@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MAUI.CleanArchitecture.Application.Common.Interfaces;
+using MAUI.CleanArchitecture.Application.User.Commands.Login;
 using MAUI.CleanArchitecture.Application.User.Commands.Register;
 using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Infrastructure.BackgroundServices;
@@ -33,6 +34,7 @@ namespace MAUI.CleanArchitecture.Infrastructure
             {
                 cfg.CreateMap<ApplicationUser, User>().ReverseMap();
                 cfg.CreateMap<ApplicationUser, RegisterCommand>().ReverseMap();
+                cfg.CreateMap<ApplicationUser, LoginCommand>().ReverseMap();
             });
 
             return services;

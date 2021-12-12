@@ -4,7 +4,9 @@ using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -18,16 +20,13 @@ namespace MAUI.CleanArchitecture.ViewModels
         private readonly IMediator _mediator;
         private readonly IPageManager _pageManager;
 
-        public Command RegisterCommand { get; }
-        public Command ToolbarItem1Command { get; }
-        private bool _notClicked = true;
+        public Command ToolbarItem1Command { get; private set; }
         public MainPageViewModel(IMediator mediator, IPageManager pageManager, UserInfo userInfo)
         {
             _mediator = mediator;
             _pageManager = pageManager;
             UserInfo = userInfo;
-            ToolbarItem1Command = new Command(LoginCommandHandler, (x) => _notClicked);
-            RegisterCommand = new Command(RegisterCommandHandler, (x) => _notClicked);
+            ToolbarItem1Command = new Command(LoginCommandHandler, (x) => UserInfo.IsSignedIn == false);
             LoadItems();
         }
 
@@ -38,35 +37,28 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         private async void LoginCommandHandler(object obj)
         {
-            var loginPageRes = await _pageManager.StartPageAsync<LoginPageViewModel>();
-            loginPageRes.PropertyChanged += LoginPageRes_PropertyChanged;
-            _notClicked = false;
-            ToolbarItem1Command.ChangeCanExecute();
-        }
-
-        private void LoginPageRes_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            var el = sender as INotifyPropertyChanged;
-            el.PropertyChanged -= LoginPageRes_PropertyChanged;
-            switch (e.PropertyName)
+            if (UserInfo.IsSignedIn)
             {
-                default:
-                    ToolbarItem1Text = $"Welcome {UserInfo.User}";
-                    ToolbarItem1Logo = "signup.png";
-                    break;
+                await _pageManager.StartPageAsync<UserInfoPageViewModel>();
+            }
+            else
+            {
+                var loginPageRes = await _pageManager.StartPageAsync<LoginPageViewModel>();
+                ToolbarItem1Command.ChangeCanExecute();
             }
         }
 
-        private async void RegisterCommandHandler(object obj)
+        public async Task Handle(UserInfo notification, CancellationToken cancellationToken)
         {
-            var loginPageRes = await _pageManager.StartPageAsync<RegisterPageViewModel>();
-            _notClicked = false;
-            ToolbarItem1Command.ChangeCanExecute();
+            await _pageManager.PopToRootPageAsync();
+            ToolbarItem1Text = $"Welcome {UserInfo.User}";
+            ToolbarItem1Logo = "signup.png";
+            OnPropertyChanged(nameof(UserInfo));
         }
 
-        public Task Handle(UserInfo notification, CancellationToken cancellationToken)
+        private void StartUserInfoPageHandler(object obj)
         {
-            return Task.CompletedTask;
+            
         }
 
         private bool _isButtonEnabled = true;
@@ -105,5 +97,7 @@ namespace MAUI.CleanArchitecture.ViewModels
         }
 
         public UserInfo UserInfo { get; }
+
+
     }
 }

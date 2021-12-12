@@ -23,17 +23,17 @@ using System.Threading;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
-    public class RegisterPageViewModel : ViewModelBase, INotificationHandler<UserInfo>
+    public class RegisterPageViewModel : ViewModelBase
     {
         private readonly IMediator _mediator;
         private readonly IValidator<RegisterCommand> _validator;
-        private readonly IPageManager _pageManager;
+        private readonly UserInfo _userInfo;
         private RegisterCommand _registerModel = new RegisterCommand();
-        public RegisterPageViewModel(IMediator mediator, IValidator<RegisterCommand> validator, IPageManager pageManager)
+        public RegisterPageViewModel(IMediator mediator, IValidator<RegisterCommand> validator, UserInfo userInfo)
         {
             _mediator = mediator;
             _validator = validator;
-            _pageManager = pageManager;
+            _userInfo = userInfo;
             RegisterCommand = new Command(() => RegisterHandlerAsync(), () =>
             {
                 var validationResult = _validator.Validate(_registerModel);
@@ -99,6 +99,7 @@ namespace MAUI.CleanArchitecture.ViewModels
             }
         }
 
+
         public Task Handle(UserInfo notification, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
@@ -108,9 +109,8 @@ namespace MAUI.CleanArchitecture.ViewModels
         {
             try
             {
-                await _mediator.Publish(new UserInfo());
                 var result = await _mediator.Send(_registerModel);
-                await _pageManager.PopPageAsync();
+                await _mediator.Publish(_userInfo);
             }
             catch (Application.Common.Exceptions.ValidationException ex)
             {

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.User.Commands.Login
 {
-    public class LoginCommand:IRequest<LoginResponseModel>
+    public class LoginCommand:IRequest<Domain.Entities.User>
     {
-        public string Login { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 }

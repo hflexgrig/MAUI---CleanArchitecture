@@ -42,18 +42,34 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
 
             foreach (Type vm in viewModels)
             {
-                services.AddScoped(vm);
-                services.AddScoped<INotificationHandler<UserInfo>>(sp =>
+                var notificationHandlers = vm.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(INotificationHandler<>)).ToList();
+
+                if (notificationHandlers.Any())
                 {
-                    return (INotificationHandler<UserInfo>)sp.GetService(vm);
-                });
+                    services.AddScoped(vm);
+                }
+                else
+                {
+                    services.AddTransient(vm);
+                }
+
+                foreach (var notificationHandlerType in notificationHandlers)
+                {
+                    services.AddScoped(notificationHandlerType, sp =>
+                    {
+                        return sp.GetRequiredService(vm);
+                        //(INotificationHandler<UserInfo>)sp.GetRequiredService(vm);
+                        //Convert.ChangeType(sp.GetRequiredService(vm,), notificationHandlerType);
+                    });
+                }
+                
             }
 
             ServiceProvider = services.BuildServiceProvider();
             ViewModelsRegistered = true;
         }
 
-        internal static async Task<TViewModel> StartPageAsync<TViewModel>()
+        internal static async Task<TViewModel> StartPageAsync<TViewModel>(bool isModal = false)
         {
             var viewModelType = typeof(TViewModel);
 
@@ -66,7 +82,14 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
 
             if (viewInstance is Page view)
             {
-                await Navigation.PushAsync(view);
+                if (isModal)
+                {
+                    await Navigation.PushModalAsync(view);
+                }
+                else
+                {
+                    await Navigation.PushAsync(view);
+                }
             }
             else
             {
@@ -81,12 +104,18 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             await Navigation.PopAsync();
         }
 
+        internal static async Task PopToRootPageAsync()
+        {
+            await Navigation.PopToRootAsync();
+        }
+
         private static bool ViewModelsRegistered = false;
 
         private static ServiceProvider ServiceProvider;
         private static IServiceCollection Services;
         private static Dictionary<Type, Type> ViewToViewModelDict;
         private static Dictionary<Type, Type> ViewModelToViewDict;
+        private static IServiceScope _mainScope;
 
         public static bool GetAutoWireViewModel(BindableObject bindableObject)
         {
@@ -114,7 +143,9 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             {
 
             }
-            var viewModel = ServiceProvider.GetServices<INotificationHandler<UserInfo>>().FirstOrDefault(t => t.GetType() == viewModelType);
+            //_mainScope = _mainScope ?? ServiceProvider.CreateScope();
+            //var viewModel = ServiceProvider.GetServices<INotificationHandler<UserInfo>>().FirstOrDefault(t => t.GetType() == viewModelType);
+            var viewModel = ServiceProvider.GetService(viewModelType);
 
             view.BindingContext = viewModel;
         }

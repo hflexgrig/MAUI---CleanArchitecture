@@ -82,7 +82,7 @@
     
     <ScrollView>
         <VerticalStackLayout>
-            
+            <Label Text="{Binding UserInfo.User.Email}" />
             <CollectionView
                 Margin="8,0"
                 ItemsSource="{Binding StoreItems}"

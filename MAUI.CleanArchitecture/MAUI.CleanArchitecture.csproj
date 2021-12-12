@@ -73,6 +73,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\UserInfoPageView.xaml.cs">
+	    <DependentUpon>UserInfoPageView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\RegisterPageView.xaml.cs">
 	    <DependentUpon>RegisterPageView.xaml</DependentUpon>
 	  </Compile>
@@ -83,6 +86,10 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\Errors.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UserInfoPageView.xaml">
+	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RegisterPageView.xaml">

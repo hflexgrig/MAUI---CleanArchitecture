@@ -1,4 +1,6 @@
-﻿using MAUI.CleanArchitecture.Domain.User;
+﻿using MAUI.CleanArchitecture.Application.Common.Interfaces;
+using MAUI.CleanArchitecture.Application.Common.Models;
+using MAUI.CleanArchitecture.Domain.User;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,12 +10,24 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.User.Commands.Login
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseModel>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, Domain.Entities.User>
     {
-        public Task<LoginResponseModel> Handle(LoginCommand request, CancellationToken cancellationToken)
+        private readonly IAuthentication _authentication;
+        private readonly UserInfo _userInfo;
+
+        public LoginCommandHandler( IAuthentication authentication, UserInfo userInfo)
         {
-            return request.Login == "admin" && request.Password == "admin" ? Task.FromResult(new LoginResponseModel { IsSucceeded = true})
-              :  Task.FromResult(new LoginResponseModel { IsSucceeded = false, FailReason = "Wrong username or password." });
+            _authentication = authentication;
+            _userInfo = userInfo;
+        }
+
+        public async Task<Domain.Entities.User> Handle(LoginCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _authentication.SignInAsync(request);
+            _userInfo.User = user;
+            _userInfo.IsSignedIn = true;
+
+            return user;
         }
     }
 }
