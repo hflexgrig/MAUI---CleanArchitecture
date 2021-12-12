@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using MAUI.CleanArchitecture.Application.MainModel.Queries;
+using FluentValidation.Results;
+using MAUI.CleanArchitecture.Application.Common.Interfaces;
 using MAUI.CleanArchitecture.Application.User.Commands.Login;
 using MAUI.CleanArchitecture.Domain;
 using MAUI.CleanArchitecture.ViewModels.Base;
@@ -14,32 +15,59 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MAUI.CleanArchitecture.Application.Common.Exceptions;
+using MAUI.CleanArchitecture.Application.Common.Models;
+using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using MAUI.CleanArchitecture.Utils;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         private readonly IValidator<LoginCommand> _validator;
+        private readonly UserInfo _userInfo;
+        private readonly IPageManager _pageManager;
         private LoginCommand _loginModel = new LoginCommand();
-        public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator)
+        private IServiceScope _scope;
+
+        public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator, UserInfo userInfo, IPageManager pageManager)
         {
+            //_serviceProvider = serviceProvider;
+            //_scope = 
+            //scope;
+            //_serviceProvider.CreateScope();
             _mediator = mediator;
+                //_scope.ServiceProvider.GetService<IMediator>();
+                //_scope.ServiceProvider.GetService<IMediator>();
             _validator = validator;
+            _userInfo = userInfo;
+            _pageManager = pageManager;
             LoginCommand = new Command(() => LoginHandlerAsync(), () =>
             {
                 var validationResult = _validator.Validate(_loginModel);
                 Errors = validationResult.Errors;
                 return validationResult.IsValid;
             });
+
+            StartRegisterCommand = new Command(() => StartRegisterHandler());
+        }
+
+        private async void StartRegisterHandler()
+        {
+           // await _pageManager.PopPageAsync();
+            await _pageManager.StartPageAsync<RegisterPageViewModel>();
         }
 
         public Command LoginCommand { get; private set; }
+        public Command StartRegisterCommand { get; }
 
         public string Login
         {
-            get { return _loginModel.Login; }
-            set { _loginModel.Login = value;OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
+            get { return _loginModel.Username; }
+            set { _loginModel.Username = value;OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
         }
 
         public string Password
@@ -48,9 +76,19 @@ namespace MAUI.CleanArchitecture.ViewModels
             set { _loginModel.Password = value; OnPropertyChanged();  LoginCommand.ChangeCanExecute(); }
         }
 
-        private void LoginHandlerAsync()
-        {
 
+        private async void LoginHandlerAsync()
+        {
+            try
+            {
+                await _mediator.Send(_loginModel);
+                await _mediator.Publish(_userInfo);
+            }
+            catch (Application.Common.Exceptions.ValidationException ex)
+            {
+                CustomErrors = ex.ValidationErrors.Select(x => new ValidationFailure(x.Key, x.Value));
+            }
         }
+
     }
 }

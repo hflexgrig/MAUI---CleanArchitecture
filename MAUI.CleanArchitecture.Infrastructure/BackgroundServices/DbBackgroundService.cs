@@ -31,7 +31,6 @@ namespace MAUI.CleanArchitecture.Infrastructure.BackgroundServices
 
             }
 
-            await Task.Delay(Timeout.Infinite);
         }
     }
 }

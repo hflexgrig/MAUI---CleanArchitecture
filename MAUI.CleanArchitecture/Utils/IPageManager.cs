@@ -4,6 +4,8 @@ namespace MAUI.CleanArchitecture.Utils
 {
     public interface IPageManager
     {
-        Task<bool> StartPage<TViewModel>();
+        Task PopPageAsync();
+        Task PopToRootPageAsync();
+        Task<TViewModel> StartPageAsync<TViewModel>(bool isModal = false);
     }
 }

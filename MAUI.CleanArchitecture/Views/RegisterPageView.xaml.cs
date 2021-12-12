@@ -10,20 +10,11 @@ using System.Threading.Tasks;
 namespace MAUI.CleanArchitecture.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPageView : ContentPage
+    public partial class RegisterPageView : ContentPage
     {
-        public LoginPageView()
+        public RegisterPageView()
         {
             InitializeComponent();
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            if(BindingContext is IDisposable vm)
-            {
-                vm.Dispose();
-            }
         }
     }
 }

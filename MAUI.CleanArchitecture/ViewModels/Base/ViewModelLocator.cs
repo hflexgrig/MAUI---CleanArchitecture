@@ -1,4 +1,6 @@
-﻿using MAUI.CleanArchitecture.Views;
+﻿using MAUI.CleanArchitecture.Application.Common.Models;
+using MAUI.CleanArchitecture.Views;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Hosting;
@@ -40,34 +42,71 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
 
             foreach (Type vm in viewModels)
             {
-                services.AddTransient(vm);
+                var notificationHandlers = vm.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(INotificationHandler<>)).ToList();
+
+                if (notificationHandlers.Any())
+                {
+                    services.AddScoped(vm);
+                }
+                else
+                {
+                    services.AddTransient(vm);
+                }
+
+                foreach (var notificationHandlerType in notificationHandlers)
+                {
+                    services.AddScoped(notificationHandlerType, sp =>
+                    {
+                        return sp.GetRequiredService(vm);
+                        //(INotificationHandler<UserInfo>)sp.GetRequiredService(vm);
+                        //Convert.ChangeType(sp.GetRequiredService(vm,), notificationHandlerType);
+                    });
+                }
+                
             }
 
             ServiceProvider = services.BuildServiceProvider();
             ViewModelsRegistered = true;
         }
 
-        internal static async Task<bool> StartPage<TViewModel>()
+        internal static async Task<TViewModel> StartPageAsync<TViewModel>(bool isModal = false)
         {
             var viewModelType = typeof(TViewModel);
 
             if (!viewModelType.Name.EndsWith("PageViewModel") || !ViewModelToViewDict.TryGetValue(viewModelType, out var viewType))
             {
-                return false;
+                return default(TViewModel);
             }
 
             var viewInstance = Activator.CreateInstance(viewType);
 
             if (viewInstance is Page view)
             {
-                await Navigation.PushAsync(view);
+                if (isModal)
+                {
+                    await Navigation.PushModalAsync(view);
+                }
+                else
+                {
+                    await Navigation.PushAsync(view);
+                }
             }
             else
             {
-                return false;
+                return default(TViewModel);
             }
 
-            return true;
+            return (TViewModel)view.BindingContext;
+        }
+
+        internal static async Task PopPageAsync()
+        {
+            await Navigation.PopAsync();
+        }
+
+        internal static async Task PopToRootPageAsync()
+        {
+            await Navigation.PopToRootAsync();
         }
 
         private static bool ViewModelsRegistered = false;
@@ -76,6 +115,7 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
         private static IServiceCollection Services;
         private static Dictionary<Type, Type> ViewToViewModelDict;
         private static Dictionary<Type, Type> ViewModelToViewDict;
+        private static IServiceScope _mainScope;
 
         public static bool GetAutoWireViewModel(BindableObject bindableObject)
         {
@@ -103,7 +143,9 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             {
 
             }
-            var viewModel = ServiceProvider.GetRequiredService(viewModelType);
+            //_mainScope = _mainScope ?? ServiceProvider.CreateScope();
+            //var viewModel = ServiceProvider.GetServices<INotificationHandler<UserInfo>>().FirstOrDefault(t => t.GetType() == viewModelType);
+            var viewModel = ServiceProvider.GetService(viewModelType);
 
             view.BindingContext = viewModel;
         }

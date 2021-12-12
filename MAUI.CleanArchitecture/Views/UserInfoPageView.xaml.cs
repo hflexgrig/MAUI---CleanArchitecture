@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace MAUI.CleanArchitecture.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPageView : ContentPage
+    public partial class UserInfoPageView : ContentPage
     {
-        public LoginPageView()
+        public UserInfoPageView()
         {
             InitializeComponent();
         }

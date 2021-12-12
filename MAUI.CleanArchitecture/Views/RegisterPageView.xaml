@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MAUI.CleanArchitecture.Views.LoginPageView"
+<ContentPage x:Class="MAUI.CleanArchitecture.Views.RegisterPageView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
              xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
-             Title="Login"
+             Title="Register"
              BackgroundColor="White">
 	<ContentPage.Content>
 		<StackLayout Padding="20" Spacing="5">
+            <Label Text="{Binding UserInfo.User.Email}" />
             <BoxView HeightRequest="10"/>
-            <Entry Text="{Binding Login}" Placeholder="Login"  />
-            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Login" />
+            <Entry Text="{Binding Email}" Placeholder="Email"  />
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Email" />
+
+            <Entry Text="{Binding Username}" Placeholder="Username"  />
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Username" />
 
             <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Password"  />
             <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Password" />
-            
-            <Button Command="{Binding LoginCommand}" Text="Login" />
+
+            <Entry Text="{Binding FirstName}" Placeholder="First name"  />
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="FirstName" />
+
+            <Entry Text="{Binding LastName}" Placeholder="Last name"  />
+            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="LastName" />
+
+            <Button Command="{Binding RegisterCommand}" Text="Register" />
 
             <controls:Errors ItemsSource="{Binding CustomErrors}"  />
-            <Label Text="Don't have account yet? " />
-            <Button Command="{Binding StartRegisterCommand}" Text="Register" />
+
         </StackLayout>
 	</ContentPage.Content>
 </ContentPage>

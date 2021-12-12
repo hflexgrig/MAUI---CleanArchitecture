@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MAUI.CleanArchitecture.Views.LoginPageView"
+<ContentPage x:Class="MAUI.CleanArchitecture.Views.UserInfoPageView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
@@ -11,17 +11,9 @@
 	<ContentPage.Content>
 		<StackLayout Padding="20" Spacing="5">
             <BoxView HeightRequest="10"/>
-            <Entry Text="{Binding Login}" Placeholder="Login"  />
-            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Login" />
-
-            <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Password"  />
-            <controls:Errors ItemsSource="{Binding Errors}" ForProperty="Password" />
-            
-            <Button Command="{Binding LoginCommand}" Text="Login" />
-
-            <controls:Errors ItemsSource="{Binding CustomErrors}"  />
-            <Label Text="Don't have account yet? " />
-            <Button Command="{Binding StartRegisterCommand}" Text="Register" />
+            <Label Text="{Binding User.Email}" />
+            <Label Text="{Binding User.Firstname}" />
+            <Label Text="{Binding User.Lastname}" />
         </StackLayout>
 	</ContentPage.Content>
 </ContentPage>

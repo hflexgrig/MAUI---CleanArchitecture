@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MAUI.CleanArchitecture.Application.Common.Models;
 using MAUI.CleanArchitecture.Application.Settings;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,10 @@ namespace MAUI.CleanArchitecture.Application
         {
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddSingleton(new UserInfo());
             return services;
         }
     }
