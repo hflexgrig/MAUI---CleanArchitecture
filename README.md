@@ -28,12 +28,12 @@ Keep {viewname}**View** {viewModelName}**ViewModel** naming conventions, as asse
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
      ```
      xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
-     viewModeBase:ViewModelLocator.AutoWireViewModel="True"` 
+     viewModeBase:ViewModelLocator.AutoWireViewModel="True"
      ```
 This will help ViewModelLocator to find viewModel and set BindingContext
 	     
-    ```
-	     private static void OnAutoWireViewModelChanged(BindableObject bindable, object oldValue, object newValue)
+```
+        private static void OnAutoWireViewModelChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var view = bindable as Element;
             if (view is null) return;
@@ -49,5 +49,5 @@ This will help ViewModelLocator to find viewModel and set BindingContext
 
             view.BindingContext = viewModel;
         }
-    ```
+```
 
