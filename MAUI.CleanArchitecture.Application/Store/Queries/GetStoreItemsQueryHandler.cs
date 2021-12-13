@@ -9,18 +9,22 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.Store.Queries
 {
-    public class GetStoreItemsQueryHandler : IRequestHandler<GetStoreItemsQuery, IList<StoreItem>>
+    public class GetStoreItemsQueryHandler : IRequestHandler<GetStoreItemsQuery, IList<CardItem>>
     {
         private readonly IFakeStoreApiService _fakeStoreApiService;
+        private readonly IStoreDbContext _storeDbContext;
 
-        public GetStoreItemsQueryHandler(IFakeStoreApiService fakeStoreApiService)
+        public GetStoreItemsQueryHandler(IFakeStoreApiService fakeStoreApiService, IStoreDbContext storeDbContext)
         {
             _fakeStoreApiService = fakeStoreApiService;
+            _storeDbContext = storeDbContext;
         }
 
-        public Task<IList<StoreItem>> Handle(GetStoreItemsQuery request, CancellationToken cancellationToken)
+        public async Task<IList<CardItem>> Handle(GetStoreItemsQuery request, CancellationToken cancellationToken)
         {
-            return _fakeStoreApiService.GetStoreItems(cancellationToken);
+            var storeItems = await _fakeStoreApiService.GetStoreItems(cancellationToken);
+            var cardItems = storeItems.Select(x => new CardItem { StoreItem = x });
+
         }
     }
 }

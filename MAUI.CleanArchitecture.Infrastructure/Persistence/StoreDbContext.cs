@@ -24,6 +24,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
         }
 
         public DbSet<StoreItem> StoreItems { get; set; }
+        public DbSet<CardItem> CardItems { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
 
         public Task MigrateAsync(CancellationToken token)

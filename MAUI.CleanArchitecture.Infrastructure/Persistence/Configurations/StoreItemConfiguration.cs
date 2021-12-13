@@ -13,8 +13,11 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<StoreItem> builder)
         {
-            builder.Property<long>(Constants.DefaultKey).ValueGeneratedOnAdd();
-            builder.HasKey(Constants.DefaultKey);
+            builder.Property(t => t.Id).IsUnicode(true).ValueGeneratedNever();
+            builder.HasKey(t => t.Id);
+
+            builder.Property<long>("CardRef");
+            builder.HasKey("CardRef");
 
             builder.Property(t => t.Title).HasMaxLength(200);
             builder.Property(t => t.Price).HasPrecision(18, 2);

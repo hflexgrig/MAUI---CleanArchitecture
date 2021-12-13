@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Application.Store.Queries
 {
-    public class GetStoreItemsQuery:IRequest<IList<StoreItem>>
+    public class GetStoreItemsQuery:IRequest<IList<CardItem>>
     {
     }
 }
