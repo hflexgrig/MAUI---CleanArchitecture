@@ -39,7 +39,7 @@
                 ItemTemplate="{StaticResource StoreItemTemplate}"  >
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
-                                     Span="2"
+                                     Span="{OnIdiom Phone=1,Default=2}"
                                      VerticalItemSpacing="8"
                                      HorizontalItemSpacing="8"/>
                 </CollectionView.ItemsLayout>

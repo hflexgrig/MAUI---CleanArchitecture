@@ -6,7 +6,7 @@
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"
              xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
-             Title="Login"
+             Title="User info"
              BackgroundColor="White">
 	<ContentPage.Content>
 		<StackLayout Padding="20" Spacing="5">

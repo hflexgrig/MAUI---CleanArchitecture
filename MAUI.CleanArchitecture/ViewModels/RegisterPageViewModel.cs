@@ -21,18 +21,21 @@ using MAUI.CleanArchitecture.Application.Common.Models;
 using MAUI.CleanArchitecture.Utils;
 using System.Threading;
 using MAUI.CleanArchitecture.Application.Common.Notificications;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
     public class RegisterPageViewModel : ViewModelBase
     {
         private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IValidator<RegisterCommand> _validator;
         private readonly UserInfo _userInfo;
         private RegisterCommand _registerModel = new RegisterCommand();
-        public RegisterPageViewModel(IMediator mediator, IValidator<RegisterCommand> validator, UserInfo userInfo)
+        public RegisterPageViewModel(IServiceProvider serviceProvider, IValidator<RegisterCommand> validator, UserInfo userInfo)
         {
-            _mediator = mediator;
+            _serviceProvider = serviceProvider;
+            _mediator = _serviceProvider.GetService<IMediator>();
             _validator = validator;
             _userInfo = userInfo;
             RegisterCommand = new Command(() => RegisterHandlerAsync(), () =>
@@ -110,12 +113,22 @@ namespace MAUI.CleanArchitecture.ViewModels
         {
             try
             {
-                var signUpNotification = await _mediator.Send(_registerModel);
+                SignupNotification signUpNotification = null;
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetService<IMediator>();
+                    signUpNotification = await mediator.Send(_registerModel);
+                }
+
                 await _mediator.Publish(signUpNotification);
             }
             catch (Application.Common.Exceptions.ValidationException ex)
             {
                 CustomErrors = ex.ValidationErrors.Select(x => new ValidationFailure(x.Key, x.Value));
+            }
+            catch(Exception ex)
+            {
+
             }
         }
     }

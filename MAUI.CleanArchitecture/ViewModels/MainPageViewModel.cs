@@ -87,13 +87,17 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         private async void LoadItems()
         {
-            var cardItems = await _mediator.Send(new GetCardItemsQuery());
-            CardItemViewModels = cardItems.Select(x =>
+            using (var scope = _serviceProvider.CreateScope())
             {
-                var vm = _serviceProvider.GetService<CardItemViewModel>();
-                vm.CardItem = x;
-                return vm;
-            }).ToList();
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+                var cardItems = await _mediator.Send(new GetCardItemsQuery());
+                CardItemViewModels = cardItems.Select(x =>
+                {
+                    var vm = _serviceProvider.GetService<CardItemViewModel>();
+                    vm.CardItem = x;
+                    return vm;
+                }).ToList();
+            }
         }
 
         private async void LoginCommandHandler(object obj)

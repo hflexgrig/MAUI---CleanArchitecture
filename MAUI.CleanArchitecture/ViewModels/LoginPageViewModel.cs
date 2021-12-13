@@ -20,19 +20,22 @@ using MAUI.CleanArchitecture.Application.Common.Models;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using MAUI.CleanArchitecture.Utils;
+using MAUI.CleanArchitecture.Application.Common.Notificications;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
         private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IValidator<LoginCommand> _validator;
         private readonly IPageManager _pageManager;
         private LoginCommand _loginModel = new LoginCommand();
 
-        public LoginPageViewModel(IMediator mediator, IValidator<LoginCommand> validator, IPageManager pageManager)
+        public LoginPageViewModel(IServiceProvider serviceProvider, IValidator<LoginCommand> validator, IPageManager pageManager)
         {
-            _mediator = mediator;
+            _serviceProvider = serviceProvider;
+            _mediator = _serviceProvider.GetService<IMediator>();
             _validator = validator;
             _pageManager = pageManager;
             LoginCommand = new Command(() => LoginHandlerAsync(), () =>
@@ -70,7 +73,13 @@ namespace MAUI.CleanArchitecture.ViewModels
         {
             try
             {
-                var signinNotification = await _mediator.Send(_loginModel);
+                SigninNotification signinNotification = null;
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetService<IMediator>();
+                    signinNotification = await mediator.Send(_loginModel);
+                }
+
                 await _mediator.Publish(signinNotification);
             }
             catch (Application.Common.Exceptions.ValidationException ex)
