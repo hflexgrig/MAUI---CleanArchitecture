@@ -73,14 +73,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\UserInfoPageView.xaml.cs">
+	  <Compile Update="Views\Pages\UserInfoPageView.xaml.cs">
 	    <DependentUpon>UserInfoPageView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\RegisterPageView.xaml.cs">
+	  <Compile Update="Views\Pages\RegisterPageView.xaml.cs">
 	    <DependentUpon>RegisterPageView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\LoginPageView.xaml.cs">
+	  <Compile Update="Views\Pages\LoginPageView.xaml.cs">
 	    <DependentUpon>LoginPageView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\ContentViews\CardItemView.xaml.cs">
+	    <DependentUpon>CardItemView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -88,15 +91,18 @@
 	  <MauiXaml Update="Controls\Errors.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\UserInfoPageView.xaml">
+	  <MauiXaml Update="Views\Pages\UserInfoPageView.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\RegisterPageView.xaml">
+	  <MauiXaml Update="Views\Pages\RegisterPageView.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\LoginPageView.xaml">
+	  <MauiXaml Update="Views\Pages\LoginPageView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ContentViews\CardItemView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

@@ -24,6 +24,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
         }
 
         public DbSet<StoreItem> StoreItems { get; set; }
+        public DbSet<CardItem> CardItems { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
 
         public Task MigrateAsync(CancellationToken token)
@@ -57,6 +58,11 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
             modelBuilder.Entity<IdentityUserToken<string>>(e => e.ToTable("UserTokens"));
             modelBuilder.Entity<IdentityRoleClaim<string>>(e => e.ToTable("UserRoleClaims"));
             modelBuilder.Entity<IdentityUserRole<string>>(e => e.ToTable("UserRole"));
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

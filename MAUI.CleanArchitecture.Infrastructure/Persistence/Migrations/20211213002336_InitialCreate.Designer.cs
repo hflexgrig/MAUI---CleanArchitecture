@@ -11,13 +11,27 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20211211173715_InitialCreate")]
+    [Migration("20211213002336_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+
+            modelBuilder.Entity("MAUI.CleanArchitecture.Domain.Entities.CardItem", b =>
+                {
+                    b.Property<long>("StoreRef")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("StoreRef");
+
+                    b.ToTable("CardItems");
+                });
 
             modelBuilder.Entity("MAUI.CleanArchitecture.Domain.Entities.Rating", b =>
                 {
@@ -37,8 +51,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MAUI.CleanArchitecture.Domain.Entities.StoreItem", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long>("CardRef")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Category")
@@ -46,6 +59,10 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .IsUnicode(true)
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Image")
                         .HasColumnType("TEXT");
@@ -58,7 +75,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("CardRef");
 
                     b.ToTable("StoreItems");
                 });
@@ -327,6 +344,15 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MAUI.CleanArchitecture.Domain.Entities.StoreItem", b =>
+                {
+                    b.HasOne("MAUI.CleanArchitecture.Domain.Entities.CardItem", null)
+                        .WithOne("StoreItem")
+                        .HasForeignKey("MAUI.CleanArchitecture.Domain.Entities.StoreItem", "CardRef")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -375,6 +401,12 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MAUI.CleanArchitecture.Domain.Entities.CardItem", b =>
+                {
+                    b.Navigation("StoreItem")
                         .IsRequired();
                 });
 

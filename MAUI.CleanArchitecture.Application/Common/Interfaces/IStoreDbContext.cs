@@ -11,7 +11,9 @@ namespace MAUI.CleanArchitecture.Application.Common.Interfaces
     public interface IStoreDbContext
     {
         DbSet<StoreItem> StoreItems { get; set; }
+        DbSet<CardItem> CardItems { get; set; }
 
         Task MigrateAsync(CancellationToken token);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

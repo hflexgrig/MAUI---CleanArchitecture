@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace MAUI.CleanArchitecture.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SubItemView : ContentView
+    public partial class CardItemView : ContentView
     {
-        public SubItemView()
+        public CardItemView()
         {
             InitializeComponent();
         }
