@@ -19,16 +19,8 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
         public static readonly BindableProperty AutoWireViewModelProperty =
             BindableProperty.CreateAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), default(bool), propertyChanged: OnAutoWireViewModelChanged);
 
-        public static INavigation Navigation { get; private set; }
-
-        internal static void InitializeNavigation(this INavigation navigation)
-        {
-            Navigation = navigation;
-        }
-
         internal static void Initialize(IServiceCollection services)
         {
-            Services = services;
             var watch = Stopwatch.StartNew();
             var viewsAndViewModels = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsClass && x.GetInterface("INotifyPropertyChanged") != null).ToList();
             watch.Stop();
@@ -58,15 +50,19 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
                     services.AddScoped(notificationHandlerType, sp =>
                     {
                         return sp.GetRequiredService(vm);
-                        //(INotificationHandler<UserInfo>)sp.GetRequiredService(vm);
-                        //Convert.ChangeType(sp.GetRequiredService(vm,), notificationHandlerType);
                     });
                 }
-                
             }
 
             ServiceProvider = services.BuildServiceProvider();
             ViewModelsRegistered = true;
+        }
+
+        #region Navigation
+
+        internal static void InitializeNavigation(this INavigation navigation)
+        {
+            Navigation = navigation;
         }
 
         internal static async Task<TViewModel> StartPageAsync<TViewModel>(bool isModal = false)
@@ -109,13 +105,15 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             await Navigation.PopToRootAsync();
         }
 
+        public static INavigation Navigation { get; private set; }
+        
+        #endregion
+
         private static bool ViewModelsRegistered = false;
 
         private static ServiceProvider ServiceProvider;
-        private static IServiceCollection Services;
         private static Dictionary<Type, Type> ViewToViewModelDict;
         private static Dictionary<Type, Type> ViewModelToViewDict;
-        private static IServiceScope _mainScope;
 
         public static bool GetAutoWireViewModel(BindableObject bindableObject)
         {

@@ -15,27 +15,19 @@ namespace MAUI.CleanArchitecture.Infrastructure.BackgroundServices
     public class DbBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public DbBackgroundService(IServiceProvider serviceProvider, SignInManager<ApplicationUser> signInManager)
+        public DbBackgroundService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _signInManager = signInManager;
-
-            // ExecuteAsync(default);
         }
-
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<IStoreDbContext>();
-                _signInManager.Context = new DefaultHttpContext { RequestServices = scope.ServiceProvider };
 
                 await dbContext.MigrateAsync(stoppingToken);
-
-
             }
 
         }

@@ -12,5 +12,6 @@ namespace MAUI.CleanArchitecture.Domain.Entities
 
         public StoreItem StoreItem { get; set; } = new StoreItem();
 
+        public decimal CalculatedPrice => StoreItem.Price * Quantity;
     }
 }

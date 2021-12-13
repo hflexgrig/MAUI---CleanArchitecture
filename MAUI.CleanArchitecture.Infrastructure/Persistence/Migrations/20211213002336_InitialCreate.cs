@@ -38,6 +38,19 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CardItems",
+                columns: table => new
+                {
+                    StoreRef = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardItems", x => x.StoreRef);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -49,23 +62,6 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StoreItems",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Category = table.Column<string>(type: "TEXT", nullable: true),
-                    Image = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StoreItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,6 +151,29 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StoreItems",
+                columns: table => new
+                {
+                    CardRef = table.Column<long>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
+                    Price = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Category = table.Column<string>(type: "TEXT", nullable: true),
+                    Image = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreItems", x => x.CardRef);
+                    table.ForeignKey(
+                        name: "FK_StoreItems_CardItems_CardRef",
+                        column: x => x.CardRef,
+                        principalTable: "CardItems",
+                        principalColumn: "StoreRef",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -214,7 +233,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
                         name: "FK_Rating_StoreItems_StoreRef",
                         column: x => x.StoreRef,
                         principalTable: "StoreItems",
-                        principalColumn: "Id",
+                        principalColumn: "CardRef",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -287,6 +306,9 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CardItems");
         }
     }
 }

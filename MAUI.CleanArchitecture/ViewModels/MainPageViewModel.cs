@@ -10,6 +10,7 @@ using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,14 +19,20 @@ namespace MAUI.CleanArchitecture.ViewModels
 {
     public class MainPageViewModel : ViewModelBase, 
         INotificationHandler<SigninNotification>,
-        INotificationHandler<SignupNotification>
+        INotificationHandler<SignupNotification>,
+        INotificationHandler<AddCardItemNotification>
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         private readonly IPageManager _pageManager;
+        private IList<CardItemViewModel> _cardItemViewModels;
 
-        public Command ToolbarItem1Command { get; private set; }
-        public MainPageViewModel(IMediator mediator, IPageManager pageManager, UserInfo userInfo)
+        private string _toolbarItem1Text = "SignIn";
+        private string _ToolbarItem1Logo = "login.png";
+
+        public MainPageViewModel(IServiceProvider serviceProvider, IMediator mediator, IPageManager pageManager, UserInfo userInfo)
         {
+            _serviceProvider = serviceProvider;
             _mediator = mediator;
             _pageManager = pageManager;
             UserInfo = userInfo;
@@ -33,9 +40,60 @@ namespace MAUI.CleanArchitecture.ViewModels
             LoadItems();
         }
 
+        #region proeprties
+        public Command ToolbarItem1Command { get; private set; }
+        public UserInfo UserInfo { get; private set; }
+
+        public string ToolbarItem1Text
+        {
+            get { return _toolbarItem1Text; }
+            set { _toolbarItem1Text = value; OnPropertyChanged(); }
+        }
+
+        public string ToolbarItem1Logo
+        {
+            get { return _ToolbarItem1Logo; }
+            set { _ToolbarItem1Logo = value; OnPropertyChanged(); }
+        }
+
+        public IList<CardItemViewModel> CardItemViewModels
+        {
+            get => _cardItemViewModels; private set
+            {
+                _cardItemViewModels = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region notifification handlers
+        public Task Handle(SignupNotification notification, CancellationToken cancellationToken)
+        {
+            return ImplementSigninNotification(notification.UserInfo);
+        }
+
+        public Task Handle(SigninNotification notification, CancellationToken cancellationToken)
+        {
+            return ImplementSigninNotification(notification.UserInfo);
+        }
+
+        public Task Handle(AddCardItemNotification notification, CancellationToken cancellationToken)
+        {
+            //TODO: add to total for checkout
+            return Task.CompletedTask;
+        }
+        #endregion
+
+
         private async void LoadItems()
         {
-            StoreItems = await _mediator.Send(new GetStoreItemsQuery());
+            var cardItems = await _mediator.Send(new GetCardItemsQuery());
+            CardItemViewModels = cardItems.Select(x =>
+            {
+                var vm = _serviceProvider.GetService<CardItemViewModel>();
+                vm.CardItem = x;
+                return vm;
+            }).ToList();
         }
 
         private async void LoginCommandHandler(object obj)
@@ -51,55 +109,6 @@ namespace MAUI.CleanArchitecture.ViewModels
             }
         }
 
-        #region handlers
-        public Task Handle(SignupNotification notification, CancellationToken cancellationToken)
-        {
-            return ImplementSigninNotification(notification.UserInfo);
-        }
-
-        public Task Handle(SigninNotification notification, CancellationToken cancellationToken)
-        {
-            return ImplementSigninNotification(notification.UserInfo);
-        }
-        #endregion
-
-        private bool _isButtonEnabled = true;
-        private IList<StoreItem> _storeItems;
-
-        public bool IsButtonEnabled
-        {
-            get { return _isButtonEnabled; }
-            set { _isButtonEnabled = value; OnPropertyChanged(); }
-        }
-
-        private string _toolbarItem1Text = "SignIn";
-
-        public string ToolbarItem1Text
-        {
-            get { return _toolbarItem1Text; }
-            set { _toolbarItem1Text = value; OnPropertyChanged(); }
-        }
-
-        private string _ToolbarItem1Logo = "login.png";
-
-        public string ToolbarItem1Logo
-        {
-            get { return _ToolbarItem1Logo; }
-            set { _ToolbarItem1Logo = value; OnPropertyChanged(); }
-        }
-
-
-        public IList<StoreItem> StoreItems
-        {
-            get => _storeItems; private set
-            {
-                _storeItems = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public UserInfo UserInfo { get; private set; }
-
         private async Task ImplementSigninNotification(UserInfo userInfo)
         {
             UserInfo = userInfo;
@@ -111,3 +120,4 @@ namespace MAUI.CleanArchitecture.ViewModels
 
     }
 }
+

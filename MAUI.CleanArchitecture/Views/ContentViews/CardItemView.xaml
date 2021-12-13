@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="MAUI.CleanArchitecture.Views.CardItemView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
+             BackgroundColor="White">
+	<ContentView.Content>
+        <GridLayout BackgroundColor="AliceBlue" 
+                                RowDefinitions="42,40,40" ColumnDefinitions="60*,40*"
+                                Padding="20">
+            <Image GridLayout.RowSpan="3" GridLayout.Column="1"
+                                    Source="{Binding CardItem.StoreItem.Image}"
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End"/>
+
+            <Label Text="{Binding CardItem.StoreItem.Title}"
+                                           />
+
+            <VerticalStackLayout
+                                    Spacing="0"
+                                    GridLayout.RowSpan="3" 
+                                    VerticalOptions="Center">
+                <Label Text="{Binding CardItem.StoreItem.Category}"  />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout
+                                GridLayout.Row="2"
+                                Spacing="10"
+                                VerticalOptions="End">
+                <Button Text="Add to card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" />
+                <Entry  Text="{Binding Quantity}" VerticalOptions="FillAndExpand" WidthRequest="100" />
+                <Label Text="{Binding CalculatedPrice, StringFormat='${0}'}" />
+
+                <!--<Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper" VerticalOptions="FillAndExpand" ValueChanged="NumericStepper_ValueChanged" />-->
+                <!--<Entry BindingContext="{x:Reference Name=NumericStepper}" Text="{Binding Path=DataContext.Value, Mode=TwoWay, Converter={StaticResource DoubleToStringConverter}, UpdateSourceEventName=ValueChanged}" VerticalOptions="FillAndExpand"/>-->
+            </HorizontalStackLayout>
+
+
+        </GridLayout>
+    </ContentView.Content>
+</ContentView>

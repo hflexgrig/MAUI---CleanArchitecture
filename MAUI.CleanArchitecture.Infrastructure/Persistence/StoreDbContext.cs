@@ -59,5 +59,10 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
             modelBuilder.Entity<IdentityRoleClaim<string>>(e => e.ToTable("UserRoleClaims"));
             modelBuilder.Entity<IdentityUserRole<string>>(e => e.ToTable("UserRole"));
         }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
 }
