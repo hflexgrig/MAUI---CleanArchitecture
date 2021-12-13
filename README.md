@@ -27,7 +27,7 @@ Keep {viewname}**View** {viewModelName}**ViewModel** naming conventions, as asse
 <ContentPage x:Class="MAUI.CleanArchitecture.Views.LoginPageView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-           **xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
+         **  xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
              viewModelBase:ViewModelLocator.AutoWireViewModel="True"**
              xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
