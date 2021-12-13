@@ -14,17 +14,20 @@ namespace MAUI.CleanArchitecture.Application.User.Commands.Login
     public class LoginCommandHandler : IRequestHandler<LoginCommand, SigninNotification>
     {
         private readonly IAuthentication _authentication;
+        private readonly UserInfo _userInfo;
 
-        public LoginCommandHandler(IAuthentication authentication)
+        public LoginCommandHandler(IAuthentication authentication, UserInfo userInfo)
         {
             _authentication = authentication;
+            _userInfo = userInfo;
         }
 
         public async Task<SigninNotification> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _authentication.SignInAsync(request);
-            var userInfo = new UserInfo { User = user, IsSignedIn = true};
-            return new SigninNotification { UserInfo = userInfo };
+            _userInfo.User = user;
+            _userInfo.IsSignedIn = true;
+            return new SigninNotification { UserInfo = _userInfo };
         }
     }
 }

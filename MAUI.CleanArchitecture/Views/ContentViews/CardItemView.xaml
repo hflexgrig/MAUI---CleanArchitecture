@@ -28,7 +28,7 @@
                                 Spacing="10"
                                 VerticalOptions="End">
                 <Button Text="Add to card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" />
-                <Entry  Text="{Binding Quantity}" VerticalOptions="FillAndExpand" WidthRequest="100" />
+                <Entry  Text="{Binding Quantity}" VerticalOptions="FillAndExpand" WidthRequest="{OnIdiom Phone=20,Default=100}" />
                 <Label Text="{Binding CalculatedPrice, StringFormat='${0}'}" />
 
                 <!--<Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper" VerticalOptions="FillAndExpand" ValueChanged="NumericStepper_ValueChanged" />-->

@@ -141,8 +141,7 @@ namespace MAUI.CleanArchitecture.ViewModels.Base
             {
 
             }
-            //_mainScope = _mainScope ?? ServiceProvider.CreateScope();
-            //var viewModel = ServiceProvider.GetServices<INotificationHandler<UserInfo>>().FirstOrDefault(t => t.GetType() == viewModelType);
+
             var viewModel = ServiceProvider.GetService(viewModelType);
 
             view.BindingContext = viewModel;
