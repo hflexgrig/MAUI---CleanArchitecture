@@ -22,19 +22,32 @@ https://user-images.githubusercontent.com/24684337/145751149-eea4dc3e-5168-4d3b-
  
  
 Keep {viewname}**View** {viewModelName}**ViewModel** naming conventions, as assembly scanners from ViewModelLocator will be able to locate and assign BindingContext to it's view. Also on some views don't forget to add
-
-```
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage x:Class="MAUI.CleanArchitecture.Views.LoginPageView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-         **  xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="True"**
-             xmlns:controls="clr-namespace:MAUI.CleanArchitecture.Controls"
-             xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
-             Title="Login"
-             BackgroundColor="White">
-	<ContentPage.Content>
-		.....
-	</ContentPage.Content>
-</ContentPage>
-```
+     ```
+     xmlns:viewModelBase="clr-namespace:MAUI.CleanArchitecture.ViewModels.Base"
+     viewModeBase:ViewModelLocator.AutoWireViewModel="True"` 
+     ```
+This will help ViewModelLocator to find viewModel and set BindingContext
+	     
+    ```
+	     private static void OnAutoWireViewModelChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var view = bindable as Element;
+            if (view is null) return;
+
+            var viewType = view.GetType();
+            
+            if (!ViewToViewModelDict.TryGetValue(viewType, out var viewModelType))
+            {
+                return;
+            }
+
+            var viewModel = ServiceProvider.GetService(viewModelType);
+
+            view.BindingContext = viewModel;
+        }
+    ```
+
