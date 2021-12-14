@@ -1,7 +1,9 @@
-﻿using MAUI.CleanArchitecture.Application.Common.Notificications;
+﻿using MAUI.CleanArchitecture.Application.Card.Commands.CreateCardItem;
+using MAUI.CleanArchitecture.Application.Common.Notificications;
 using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.ViewModels.Base;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
@@ -14,16 +16,31 @@ namespace MAUI.CleanArchitecture.ViewModels
     public class CardItemViewModel : ViewModelBase
     {
         private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
 
-        public CardItemViewModel(IMediator mediator)
+        public CardItemViewModel(IServiceProvider serviceProvider)
         {
             AddToCardCommand = new Command((obj) => AddToCardHandler(), (obj) => CardItem.Quantity > 0);
-            _mediator = mediator;
+            _serviceProvider = serviceProvider;
+            _mediator = _serviceProvider.GetService<IMediator>();
         }
 
-        private void AddToCardHandler()
+        private async void AddToCardHandler()
         {
-            _mediator.Publish(new AddCardItemNotification { CardItem = CardItem});
+            try
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetService<IMediator>();
+                    await mediator.Send(new CreateCardItemCommand { CardItem = CardItem });
+                }
+
+                await _mediator.Publish(new AddCardItemNotification { CardItem = CardItem });
+            }
+            catch (Exception ex)
+            {
+                //TODO: Show user facing
+            }
         }
 
         public int Quantity

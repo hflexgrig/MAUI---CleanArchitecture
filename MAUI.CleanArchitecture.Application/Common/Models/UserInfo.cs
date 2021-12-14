@@ -10,7 +10,7 @@ namespace MAUI.CleanArchitecture.Application.Common.Models
     public class UserInfo
     {
         public bool IsSignedIn { get; internal set; }
-        
+        public Guid SessionId { get; } = Guid.NewGuid();
         public Domain.Entities.User User { get; internal set; } = new Domain.Entities.User();
     }
 }

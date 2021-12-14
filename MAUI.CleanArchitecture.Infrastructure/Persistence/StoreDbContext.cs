@@ -49,15 +49,8 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityUser>(e => e.ToTable("StoreUsers"));
-            modelBuilder.Entity<IdentityRole>(e => e.ToTable("Roles"));
-            modelBuilder.Entity<IdentityUserClaim<string>>(e => e.ToTable("UserClaims"));
-            modelBuilder.Entity<IdentityUserLogin<string>>(e => e.ToTable("UserLogins"));
-            modelBuilder.Entity<IdentityUserToken<string>>(e => e.ToTable("UserTokens"));
-            modelBuilder.Entity<IdentityRoleClaim<string>>(e => e.ToTable("UserRoleClaims"));
-            modelBuilder.Entity<IdentityUserRole<string>>(e => e.ToTable("UserRole"));
+            base.OnModelCreating(modelBuilder);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAUI.CleanArchitecture.Application.Store.Queries
+namespace MAUI.CleanArchitecture.Application.Store.Queries.GetStoreItemsQuery
 {
-    public class GetCardItemsQuery:IRequest<IList<CardItem>>
+    public class GetStoreItemsQuery:IRequest<IList<StoreItem>>
     {
     }
 }

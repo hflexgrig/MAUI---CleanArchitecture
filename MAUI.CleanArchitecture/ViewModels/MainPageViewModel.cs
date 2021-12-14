@@ -1,6 +1,8 @@
-﻿using MAUI.CleanArchitecture.Application.Common.Models;
+﻿using MAUI.CleanArchitecture.Application.Card.Commands.CreateCardItem;
+using MAUI.CleanArchitecture.Application.Common.Models;
 using MAUI.CleanArchitecture.Application.Common.Notificications;
 using MAUI.CleanArchitecture.Application.Store.Queries;
+using MAUI.CleanArchitecture.Application.Store.Queries.GetStoreItemsQuery;
 using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Utils;
 using MAUI.CleanArchitecture.ViewModels.Base;
@@ -17,7 +19,7 @@ using System.Windows.Input;
 
 namespace MAUI.CleanArchitecture.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase, 
+    public class MainPageViewModel : ViewModelBase,
         INotificationHandler<SigninNotification>,
         INotificationHandler<SignupNotification>,
         INotificationHandler<AddCardItemNotification>
@@ -90,11 +92,11 @@ namespace MAUI.CleanArchitecture.ViewModels
             using (var scope = _serviceProvider.CreateScope())
             {
                 var mediator = scope.ServiceProvider.GetService<IMediator>();
-                var cardItems = await _mediator.Send(new GetCardItemsQuery());
-                CardItemViewModels = cardItems.Select(x =>
+                var storeItems = await _mediator.Send(new GetStoreItemsQuery());
+                CardItemViewModels = storeItems.Select(x =>
                 {
                     var vm = _serviceProvider.GetService<CardItemViewModel>();
-                    vm.CardItem = x;
+                    vm.CardItem = new CardItem { StoreItem = x, SessionId = UserInfo.SessionId, UserId = UserInfo.IsSignedIn ? UserInfo.User.Id : null };
                     return vm;
                 }).ToList();
             }
@@ -115,6 +117,13 @@ namespace MAUI.CleanArchitecture.ViewModels
 
         private async Task ImplementSigninNotification(UserInfo userInfo)
         {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+                //Update all carditems to logged in or registered user id
+                await mediator.Send(new UpdateCardItemCommand { UserId = userInfo.User.Id, SessionId = userInfo.SessionId });
+            }
+
             UserInfo = userInfo;
             OnPropertyChanged(nameof(UserInfo));
             await _pageManager.PopToRootPageAsync();

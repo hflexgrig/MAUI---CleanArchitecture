@@ -1,4 +1,5 @@
 ﻿using MAUI.CleanArchitecture.Domain.Entities;
+using MAUI.CleanArchitecture.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -17,6 +18,10 @@ namespace MAUI.CleanArchitecture.Infrastructure.Persistence.Configurations
             builder.HasKey("StoreRef");
 
             builder.HasOne(t => t.StoreItem).WithOne().HasForeignKey<StoreItem>("CardRef");
+
+            //var identityUser = "IdentityUser";
+            //builder.Property<ApplicationUser>(identityUser);
+            //builder.HasOne(identityUser).WithMany();
         }
     }
 }
