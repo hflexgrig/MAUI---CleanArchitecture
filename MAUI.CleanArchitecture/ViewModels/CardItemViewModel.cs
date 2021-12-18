@@ -49,6 +49,7 @@ namespace MAUI.CleanArchitecture.ViewModels
             set
             {
                 CardItem.Quantity = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(CardItem.CalculatedPrice));
                 AddToCardCommand.ChangeCanExecute();
             }

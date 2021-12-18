@@ -1,40 +1,47 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentView x:Class="MAUI.CleanArchitecture.Views.CardItemView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MAUI.CleanArchitecture.Converters"
              xmlns:local="clr-namespace:MAUI.CleanArchitecture.Views"
              BackgroundColor="White">
-	<ContentView.Content>
-        <GridLayout BackgroundColor="AliceBlue" 
-                                RowDefinitions="42,40,40" ColumnDefinitions="60*,40*"
-                                Padding="20">
-            <Image GridLayout.RowSpan="3" GridLayout.Column="1"
-                                    Source="{Binding CardItem.StoreItem.Image}"
-                                    VerticalOptions="Start"
-                                    HorizontalOptions="End"/>
+    <ContentView.Resources>
+        <converters:ImageSourceConverter x:Key="ImageSourceConverter" />
 
-            <Label Text="{Binding CardItem.StoreItem.Title}"
-                                           />
+    </ContentView.Resources>
+    <ContentView.Content>
+        <GridLayout BackgroundColor="AliceBlue"
+                    RowDefinitions="50,50,*" ColumnDefinitions="70*,30*"
+                    Padding="20">
+            <Image GridLayout.RowSpan="2" GridLayout.Column="1" WidthRequest="100" HeightRequest="100"
+                   Source="{Binding CardItem.StoreItem.Image, Converter={StaticResource ImageSourceConverter}}"
+                   VerticalOptions="Start"
+                   HorizontalOptions="End" />
 
-            <VerticalStackLayout
-                                    Spacing="0"
-                                    GridLayout.RowSpan="3" 
-                                    VerticalOptions="Center">
-                <Label Text="{Binding CardItem.StoreItem.Category}"  />
+            <Label Text="{Binding CardItem.StoreItem.Title}" />
+
+            <VerticalStackLayout GridLayout.Row="1"
+                                 Spacing="0"
+                                 VerticalOptions="Center">
+                <Label Text="{Binding CardItem.StoreItem.Category}" />
             </VerticalStackLayout>
-
-            <HorizontalStackLayout
-                                GridLayout.Row="2"
-                                Spacing="10"
-                                VerticalOptions="End">
-                <Button Text="Add to card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" />
-                <Entry  Text="{Binding Quantity}" VerticalOptions="FillAndExpand" WidthRequest="{OnIdiom Phone=20,Default=100}" />
-                <Label Text="{Binding CalculatedPrice, StringFormat='${0}'}" />
-
-                <!--<Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper" VerticalOptions="FillAndExpand" ValueChanged="NumericStepper_ValueChanged" />-->
-                <!--<Entry BindingContext="{x:Reference Name=NumericStepper}" Text="{Binding Path=DataContext.Value, Mode=TwoWay, Converter={StaticResource DoubleToStringConverter}, UpdateSourceEventName=ValueChanged}" VerticalOptions="FillAndExpand"/>-->
+            
+            <HorizontalStackLayout GridLayout.Row="2"  
+                                   Spacing="10" VerticalOptions="End">
+                <Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper"
+                         VerticalOptions="FillAndExpand" Value="{Binding Quantity}" />
+                <Entry Text="{Binding Path=Quantity}"
+                       VerticalOptions="FillAndExpand" />
             </HorizontalStackLayout>
-
+            
+            <VerticalStackLayout
+                GridLayout.Row="3" GridLayout.Column="1"
+                Spacing="10"
+                VerticalOptions="End">
+                <Label Text="{Binding CalculatedPrice, StringFormat='${0}'}"  />
+                <Button Text="card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" />
+            </VerticalStackLayout>
 
         </GridLayout>
     </ContentView.Content>
