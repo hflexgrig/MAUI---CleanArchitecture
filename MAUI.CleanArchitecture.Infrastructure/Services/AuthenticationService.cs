@@ -7,11 +7,6 @@ using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Infrastructure.Services
 {
@@ -64,7 +59,7 @@ namespace MAUI.CleanArchitecture.Infrastructure.Services
             return _mapper.Map<User>(loaded);
         }
 
-        public async Task<User> UpdatePassword(string email, string oldPassword, string newPassword)
+        public async Task<User?> UpdatePassword(string email, string oldPassword, string newPassword)
         {
             var loaded1 = await _userManager.FindByNameAsync(email);
             if (loaded1 == null)
