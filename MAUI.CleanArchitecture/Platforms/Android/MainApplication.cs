@@ -9,16 +9,11 @@ namespace MAUI.CleanArchitecture
 	[Application]
 	public class MainApplication : MauiApplication
 	{
-		public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-			: base(handle, ownership)
-		{
-		}
-
-        protected override MauiApp CreateMauiApp()
+        public MainApplication(IntPtr handle, JniHandleOwnership ownership)
+        : base(handle, ownership)
         {
-			var app = MauiProgram.CreateMauiApp();
-			app.StartAsync().GetAwaiter().GetResult();
-            return app;
         }
+
+        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 }

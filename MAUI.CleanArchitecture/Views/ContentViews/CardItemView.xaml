@@ -11,38 +11,39 @@
 
     </ContentView.Resources>
     <ContentView.Content>
-        <GridLayout BackgroundColor="AliceBlue"
+        <Grid BackgroundColor="AliceBlue"
                     RowDefinitions="50,50,*" ColumnDefinitions="70*,30*"
                     Padding="20">
-            <Image GridLayout.RowSpan="2" GridLayout.Column="1" WidthRequest="100" HeightRequest="100"
+            <Image Grid.RowSpan="2" Grid.Column="1" WidthRequest="100" HeightRequest="100"
                    Source="{Binding CardItem.StoreItem.Image, Converter={StaticResource ImageSourceConverter}}"
                    VerticalOptions="Start"
                    HorizontalOptions="End" />
 
             <Label Text="{Binding CardItem.StoreItem.Title}" />
 
-            <VerticalStackLayout GridLayout.Row="1"
+            <VerticalStackLayout Grid.Row="1"
                                  Spacing="0"
                                  VerticalOptions="Center">
                 <Label Text="{Binding CardItem.StoreItem.Category}" />
             </VerticalStackLayout>
             
-            <HorizontalStackLayout GridLayout.Row="2"  
+            <VerticalStackLayout Grid.Row="2"  
                                    Spacing="10" VerticalOptions="End">
+                <Entry Text="{Binding Path=Quantity}" HorizontalOptions="StartAndExpand"
+                       VerticalOptions="FillAndExpand" />
                 <Stepper Minimum="0" Maximum="100" Increment="1" x:Name="NumericStepper"
                          VerticalOptions="FillAndExpand" Value="{Binding Quantity}" />
-                <Entry Text="{Binding Path=Quantity}"
-                       VerticalOptions="FillAndExpand" />
-            </HorizontalStackLayout>
+               
+            </VerticalStackLayout>
             
             <VerticalStackLayout
-                GridLayout.Row="3" GridLayout.Column="1"
+                Grid.Row="3" Grid.Column="1"
                 Spacing="10"
                 VerticalOptions="End">
                 <Label Text="{Binding CalculatedPrice, StringFormat='${0}'}"  />
-                <Button Text="card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" />
+                <Button Text="card" ImageSource="add_to_cart.png" Command="{Binding AddToCardCommand}" HeightRequest="50" />
             </VerticalStackLayout>
 
-        </GridLayout>
+        </Grid>
     </ContentView.Content>
 </ContentView>

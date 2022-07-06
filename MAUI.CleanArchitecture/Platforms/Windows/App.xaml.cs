@@ -25,7 +25,7 @@ namespace MAUI.CleanArchitecture.WinUI
         protected override MauiApp CreateMauiApp()
         {
             var app = MauiProgram.CreateMauiApp();
-            app.StartAsync().GetAwaiter().GetResult();
+            //app.StartAsync().GetAwaiter().GetResult();
             return app;
         }
 
@@ -33,7 +33,7 @@ namespace MAUI.CleanArchitecture.WinUI
         {
             base.OnLaunched(args);
 
-            Microsoft.Maui.Essentials.Platform.OnLaunched(args);
+           // Microsoft.Maui.Essentials.Platform.OnLaunched(args);
         }
     }
 }

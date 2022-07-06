@@ -12,7 +12,7 @@ namespace MAUI.CleanArchitecture
         {
             InitializeComponent();
 
-            var mainPage = new MainPageView();
+            var mainPage = new AppShell();
             Navigation = new NavigationPage(mainPage);
             mainPage.Navigation.InitializeNavigation();
         }
