@@ -7,7 +7,6 @@ using MAUI.CleanArchitecture.Infrastructure.BackgroundServices;
 using MAUI.CleanArchitecture.Infrastructure.Identity;
 using MAUI.CleanArchitecture.Infrastructure.Persistence;
 using MAUI.CleanArchitecture.Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MAUI.CleanArchitecture.Infrastructure
@@ -24,10 +23,10 @@ namespace MAUI.CleanArchitecture.Infrastructure
             }).AddTypedClient<IFakeStoreApiService, FakeStoreApiService>();
 
             services.AddDbContext<IStoreDbContext, StoreDbContext>();
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<StoreDbContext>()
-                .AddDefaultTokenProviders();
-            services.AddScoped<IAuthentication, AuthenticationService>();
+            // services.AddIdentity<ApplicationUser, IdentityRole>()
+            //     .AddEntityFrameworkStores<StoreDbContext>()
+            //     .AddDefaultTokenProviders();
+            // services.AddScoped<IAuthentication, AuthenticationService>();
 
 
             services.AddAutoMapper(cfg =>

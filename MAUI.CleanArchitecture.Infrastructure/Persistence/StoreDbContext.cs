@@ -1,8 +1,6 @@
 ﻿using MAUI.CleanArchitecture.Application.Common.Interfaces;
 using MAUI.CleanArchitecture.Domain.Entities;
 using MAUI.CleanArchitecture.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MAUI.CleanArchitecture.Infrastructure.Persistence
 {
-    public class StoreDbContext : IdentityDbContext<ApplicationUser>, IStoreDbContext
+    public class StoreDbContext : DbContext, IStoreDbContext
     {
         private readonly IConfiguration _configuration;
 

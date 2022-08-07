@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MAUI.CleanArchitecture.Appl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MAUI.CleanArchitecture.Infrastructure", "MAUI.CleanArchitecture.Infrastructure\MAUI.CleanArchitecture.Infrastructure.csproj", "{FA02702D-8CC8-470B-835C-0C202F30B65B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MAUI.MigrationsConsole", "MAUI.MigrationsConsole\MAUI.MigrationsConsole.csproj", "{0B3AE437-185E-4787-A098-69A8059FE71D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{FA02702D-8CC8-470B-835C-0C202F30B65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA02702D-8CC8-470B-835C-0C202F30B65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA02702D-8CC8-470B-835C-0C202F30B65B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B3AE437-185E-4787-A098-69A8059FE71D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B3AE437-185E-4787-A098-69A8059FE71D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B3AE437-185E-4787-A098-69A8059FE71D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B3AE437-185E-4787-A098-69A8059FE71D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
