@@ -28,26 +28,15 @@ namespace MAUI.CleanArchitecture
 #endif
           
             var builder = MauiApp.CreateBuilder();
-            builder.Configuration.AddJsonStream(appSettingsStream);
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(appSettingsStream)
+                .Build();
+            builder.Configuration.AddConfiguration(config);
             builder.Services.AddSingleton<IPageManager, PageManager>();
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure();
             ViewModelLocator.Initialize(builder.Services);
-            var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-            //builder.Host.ConfigureAppConfiguration((prop, config) =>
-            //    config.AddJsonStream(appSettingsStream)
-            //);
-
-            //builder.Host.ConfigureServices((context, services) =>
-            //{
-            //    services.AddSingleton<IPageManager, PageManager>();
-            //    services.AddApplication();
-            //    services.AddInfrastructure();
-
-            //    ViewModelLocator.Initialize(services);
-
-            //    var connString = context.Configuration.GetConnectionString("DefaultConnection");
-            //});
+           
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
